@@ -14,7 +14,7 @@ phones home.
 
 The easiest way to try it without touching a terminal:
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=<your-github-username>/<your-repo-name>)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/millimillimillimilli/our-list)
 
 Click it, connect your GitHub account, and Render reads `render.yaml` in this
 repo to set everything up — a persistent disk for your data, and it'll ask
@@ -25,7 +25,7 @@ Starter plan (a few dollars a month) for your data to survive restarts.
 
 **Railway** works too, just without a single-click button yet: go to
 [railway.app](https://railway.app) → New Project → Deploy from GitHub repo →
-pick this one. Railway auto-detects the `Dockerfile`. After the first deploy,
+pick `millimillimillimilli/our-list`. Railway auto-detects the `Dockerfile`. After the first deploy,
 go to the service's Variables tab and add `APP_PASSWORD`, then add a Volume
 (Settings → Volumes) mounted at `/data` — without that step your data won't
 survive a redeploy.
