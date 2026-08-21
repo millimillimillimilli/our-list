@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Our List</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#FFF6F2">
+<link rel="icon" href="/icons/icon-192-v2.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon-v2.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Our List">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+  @font-face {
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/fonts/fredoka.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 300 900;
+    font-display: swap;
+    src: url('/fonts/nunito.woff2') format('woff2');
+  }
+
+  :root {
+    --bg: #FFF6F2;
+    --surface: #FFFFFF;
+    --ink: #3A2E42;
+    --ink-soft: #8B7D93;
+    --ink-faint: #C3B8C9;
+    --line: #F1E4EC;
+
+    --brand: #FF6FA5;
+    --brand-deep: #E14C82;
+
+    --mustard: #FFE1D6; --mustard-dark: #E85A2B;
+    --sage: #DBF5E3; --sage-dark: #1F8C58;
+    --teal: #FFF2C6; --teal-dark: #B9800F;
+    --clay: #DCEEFF; --clay-dark: #2570B3;
+    --plum: #F1E0FB; --plum-dark: #8C43B0;
+
+    --shadow-tint: rgba(225,76,130,0.16);
+    --display: 'Fredoka', ui-rounded, -apple-system, sans-serif;
+    --body-font: 'Nunito', -apple-system, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #221C29; --surface: #2C2433; --ink: #F5EDF7; --ink-soft: #B6A8C0; --ink-faint: #6C6076; --line: #3A3040;
+      --brand: #FF8FBB; --brand-deep: #FFB3D0;
+      --mustard: #3E2A21; --mustard-dark: #FFC7A3;
+      --sage: #1E3327; --sage-dark: #A6F2C8;
+      --teal: #3A2F13; --teal-dark: #FFE9AF;
+      --clay: #1B2E40; --clay-dark: #B9DEFF;
+      --plum: #33223D; --plum-dark: #E9C4F7;
+      --shadow-tint: rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #221C29; --surface: #2C2433; --ink: #F5EDF7; --ink-soft: #B6A8C0; --ink-faint: #6C6076; --line: #3A3040;
+    --brand: #FF8FBB; --brand-deep: #FFB3D0;
+    --mustard: #3E2A21; --mustard-dark: #FFC7A3;
+    --sage: #1E3327; --sage-dark: #A6F2C8;
+    --teal: #3A2F13; --teal-dark: #FFE9AF;
+    --clay: #1B2E40; --clay-dark: #B9DEFF;
+    --plum: #33223D; --plum-dark: #E9C4F7;
+    --shadow-tint: rgba(0,0,0,0.45);
+  }
+  :root[data-theme="light"] {
+    --bg: #FFF6F2; --surface: #FFFFFF; --ink: #3A2E42; --ink-soft: #8B7D93; --ink-faint: #C3B8C9; --line: #F1E4EC;
+    --brand: #FF6FA5; --brand-deep: #E14C82;
+    --mustard: #FFE1D6; --mustard-dark: #E85A2B;
+    --sage: #DBF5E3; --sage-dark: #1F8C58;
+    --teal: #FFF2C6; --teal-dark: #B9800F;
+    --clay: #DCEEFF; --clay-dark: #2570B3;
+    --plum: #F1E0FB; --plum-dark: #8C43B0;
+    --shadow-tint: rgba(225,76,130,0.16);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body-font);
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 26px 16px 40px; }
+
+  header { text-align: center; padding: 6px 0 4px; }
+  header h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 2.1rem;
+    color: var(--brand-deep);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .dots-deco { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
+  .dots-deco span { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+  .whoami {
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    margin: 10px 0 26px; font-family: var(--body-font); font-weight: 700; font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+  .whoami button {
+    background: none; border: none; color: var(--brand); text-decoration: underline;
+    text-underline-offset: 2px; font-family: inherit; font-weight: 700; font-size: 0.8rem;
+    cursor: pointer; padding: 0;
+  }
+  .whoami button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+
+  .card {
+    background: var(--_bg, var(--surface));
+    border-radius: 22px;
+    padding: 16px 16px 14px;
+    margin-bottom: 16px;
+    position: relative;
+    box-shadow: 0 10px 24px -14px var(--shadow-tint);
+    transform: rotate(var(--tilt, 0deg));
+  }
+  .card:nth-of-type(odd) { --tilt: -0.6deg; }
+  .card:nth-of-type(even) { --tilt: 0.5deg; }
+
+  .pin { display: none; }
+
+  .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .card-header h2 {
+    font-family: var(--display); font-weight: 600; font-size: 1.15rem; margin: 0;
+    color: var(--_deep, var(--brand-deep));
+  }
+  .card-header .count { font-family: var(--body-font); font-weight: 700; font-size: 0.7rem; color: var(--_deep, var(--brand-deep)); opacity: 0.65; }
+  .card-header h2 svg { vertical-align: -2px; margin-right: 2px; }
+
+  .settings-btn {
+    background: none; border: none; cursor: pointer; padding: 3px;
+    color: var(--_deep, var(--brand-deep)); opacity: 0.6; flex-shrink: 0;
+    display: flex; align-items: center;
+  }
+  .settings-btn:hover { opacity: 1; }
+
+  .locked-body { padding: 6px 0 4px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .locked-count { font-size: 0.82rem; font-weight: 700; color: var(--_deep, var(--brand-deep)); opacity: 0.7; }
+  .unlock-btn {
+    background: var(--_deep, var(--brand-deep)); color: white; border: none;
+    border-radius: 12px; padding: 8px 16px; font-size: 0.8rem; cursor: pointer;
+    font-family: var(--body-font); font-weight: 800;
+  }
+  .unlock-btn:hover { filter: brightness(1.08); }
+
+  .card.mustard { --_bg: var(--mustard); --_deep: var(--mustard-dark); }
+  .card.sage    { --_bg: var(--sage);    --_deep: var(--sage-dark); }
+  .card.teal    { --_bg: var(--teal);    --_deep: var(--teal-dark); }
+  .card.clay    { --_bg: var(--clay);    --_deep: var(--clay-dark); }
+  .card.plum    { --_bg: var(--plum);    --_deep: var(--plum-dark); }
+
+  ul.tasks { list-style: none; margin: 0; padding: 0; }
+  ul.tasks li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 2px; border-bottom: 1.5px dashed rgba(0,0,0,0.08);
+  }
+  ul.tasks li:last-child { border-bottom: none; }
+  ul.tasks li[data-task-id] {
+    -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+  }
+  /* SortableJS's own drag-state hooks, shared with the album grid below */
+  .sortable-ghost { opacity: 0.3; }
+  .sortable-chosen { box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+  ul.tasks .sortable-fallback {
+    display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px;
+    background: var(--surface); border-radius: 12px; box-sizing: border-box;
+    opacity: 0.95; box-shadow: 0 14px 30px rgba(0,0,0,0.45);
+  }
+  .check {
+    width: 23px; height: 23px; border-radius: 8px; border: 2px solid var(--_deep, var(--brand-deep));
+    flex-shrink: 0; margin-top: 1px; cursor: pointer; background: rgba(255,255,255,0.55);
+    display:flex; align-items:center; justify-content:center; color: transparent;
+    font-size: 12px; padding: 0;
+  }
+  li.done .check { background: var(--_deep, var(--brand-deep)); color: white; }
+  .check:focus-visible { outline: 2px solid var(--_deep, var(--brand-deep)); outline-offset: 2px; }
+  .task-body { flex: 1; min-width: 0; }
+  .task-text { font-size: 0.96rem; font-weight: 700; word-break: break-word; }
+  li.done .task-text { text-decoration: line-through; color: var(--_deep, var(--ink-soft)); opacity: 0.5; }
+  .task-meta { font-family: var(--body-font); font-weight: 700; font-size: 0.68rem; color: var(--_deep, var(--ink-soft)); opacity: 0.6; margin-top: 2px; }
+  .del-task {
+    background: none; border: none; color: var(--_deep, var(--ink-soft)); opacity: 0.5; cursor: pointer; font-size: 1.1rem;
+    line-height: 1; padding: 0 4px;
+  }
+  .del-task:hover { opacity: 1; }
+  .task-edit-input {
+    width: 100%; box-sizing: border-box; font-family: var(--heading-font, inherit);
+    font-size: 0.96rem; font-weight: 700; padding: 4px 6px; border-radius: 8px;
+    border: 1.5px solid var(--_deep, var(--brand-deep)); background: rgba(255,255,255,0.7); color: inherit;
+  }
+  .task-edit-input:focus { outline: 2px solid var(--_deep, var(--brand-deep)); outline-offset: 1px; }
+
+  .add-items-btn {
+    width: 100%; margin-top: 12px; background: var(--_deep, var(--brand-deep)); color: white; border: none;
+    border-radius: 12px; padding: 10px 16px; font-size: 0.86rem; cursor: pointer;
+    font-family: var(--body-font); font-weight: 800;
+  }
+  .add-items-btn:hover { filter: brightness(1.08); }
+  .add-items-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .empty { color: var(--_deep, var(--ink-soft)); opacity: 0.55; font-size: 0.86rem; font-weight: 600; font-style: normal; padding: 8px 0; }
+
+  .new-section {
+    text-align: center; margin: 6px 0 26px;
+  }
+  .new-section button {
+    background: transparent; border: 2px dashed var(--brand); color: var(--brand-deep);
+    border-radius: 16px; padding: 10px 20px; font-family: var(--body-font); font-weight: 800;
+    font-size: 0.82rem; cursor: pointer;
+  }
+  .new-section button:hover { background: rgba(255,111,165,0.1); }
+
+  .view-switch { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 4px 0 24px; }
+  .view-tab {
+    background: none; border: 2px solid var(--line); color: var(--ink-soft);
+    border-radius: 14px; padding: 8px 16px; font-family: var(--body-font); font-weight: 800;
+    font-size: 0.85rem; cursor: pointer;
+  }
+  .view-tab.active { background: var(--brand); border-color: var(--brand); color: white; }
+  .view-tab:hover:not(.active) { border-color: var(--brand); }
+
+  .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .calendar-header button {
+    background: none; border: none; font-size: 1.5rem; color: var(--brand-deep); cursor: pointer;
+    padding: 4px 12px; line-height: 1;
+  }
+  .calendar-header h2 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; margin: 0; color: var(--brand-deep); text-align: center; }
+
+  .calendar-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+    font-size: 0.66rem; font-weight: 800; color: var(--ink-faint); margin-bottom: 6px; text-transform: uppercase;
+  }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 20px; }
+  .cal-cell {
+    aspect-ratio: 1; border-radius: 12px; background: var(--surface); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    border: 2px solid transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .cal-cell:hover { border-color: var(--brand); }
+  .cal-cell.empty { background: none; box-shadow: none; cursor: default; }
+  .cal-cell.today { border-color: var(--brand); }
+  .cal-cell.has-event { background: color-mix(in srgb, var(--brand) 20%, var(--surface)); }
+  .cal-date { font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+  .cal-dots { display: flex; gap: 4px; height: 11px; align-items: center; }
+  .cal-dots .icon { display: flex; }
+  .cal-dots .icon.sun { color: var(--mustard-dark); }
+  .cal-dots .icon.moon { color: var(--plum-dark); }
+
+  .day-modal { max-width: 340px; }
+  .day-slot { margin-bottom: 16px; }
+  .day-slot-label {
+    font-weight: 800; font-size: 0.85rem; color: var(--brand-deep); margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .event-list { list-style: none; margin: 0 0 8px; padding: 0; }
+  .event-list li {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    padding: 7px 10px; background: var(--bg); border-radius: 10px; margin-bottom: 4px;
+    font-size: 0.85rem; font-weight: 700; color: var(--ink);
+  }
+  .event-list li button {
+    background: none; border: none; color: var(--ink-faint); cursor: pointer; font-size: 1.05rem;
+    padding: 0 2px; flex-shrink: 0;
+  }
+  .event-list li button:hover { color: var(--brand-deep); }
+  .event-list .empty-event {
+    color: var(--ink-faint); font-style: italic; font-size: 0.8rem; font-weight: 600;
+    background: none; padding: 4px 10px;
+  }
+  .day-slot-add {
+    width: 100%; background: none; border: 2px dashed var(--line); border-radius: 10px;
+    padding: 8px; font-size: 0.78rem; font-weight: 800; color: var(--ink-soft); cursor: pointer;
+    font-family: var(--body-font);
+  }
+  .day-slot-add:hover { border-color: var(--brand); color: var(--brand-deep); }
+
+  .scan-modal { max-width: 340px; }
+  .scan-modal video {
+    width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px;
+    margin-bottom: 12px; background: #000;
+  }
+  .scan-status { text-align: center; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
+  .voice-timer {
+    text-align: center; font-family: var(--display); font-weight: 600; font-size: 1.8rem;
+    color: var(--brand-deep); margin-bottom: 4px;
+  }
+  .voice-record-btn {
+    width: 100%; background: var(--brand-deep); color: white; border: none; border-radius: 14px;
+    padding: 14px; font-size: 0.95rem; font-weight: 800; cursor: pointer; font-family: var(--body-font);
+    display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;
+  }
+  .voice-record-btn:hover { filter: brightness(1.08); }
+  .voice-record-btn.recording { background: #d43d3d; }
+
+  .note-caption a, .lightbox-text-note a {
+    color: inherit; text-decoration: underline; text-underline-offset: 2px; font-weight: 800;
+  }
+
+  .build-footer {
+    text-align: center; font-size: 0.66rem; font-weight: 700; color: var(--ink-faint);
+    margin: 24px 0 8px; font-family: var(--body-font); letter-spacing: 0.02em;
+  }
+
+  .toast {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+    background: var(--brand-deep); color: white; padding: 9px 18px; border-radius: 20px;
+    font-size: 0.84rem; font-weight: 700; box-shadow: 0 8px 20px -6px var(--shadow-tint);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+    font-family: var(--body-font);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(6px); }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(58,46,66,0.5);
+    display: flex; align-items: center; justify-content: center; z-index: 50;
+  }
+  .modal {
+    background: var(--surface); border-radius: 22px; padding: 24px; width: 90%; max-width: 320px;
+    text-align: center;
+  }
+  .modal h3 { font-family: var(--display); font-weight: 600; font-size: 1.4rem; margin: 0 0 12px; color: var(--brand-deep); }
+  .modal input {
+    width: 100%; padding: 10px 12px; font-size: 1rem; border: 2px solid var(--line); border-radius: 12px;
+    margin-bottom: 14px; font-family: var(--body-font); font-weight: 700; box-sizing: border-box;
+  }
+  .modal input:focus { outline: none; border-color: var(--brand); }
+  .modal select {
+    width: 100%; padding: 10px 12px; font-size: 1rem; border: 2px solid var(--line); border-radius: 12px;
+    margin-bottom: 14px; font-family: var(--body-font); font-weight: 700; box-sizing: border-box;
+    background: var(--surface); color: var(--ink);
+  }
+  .modal select:focus { outline: none; border-color: var(--brand); }
+  .modal button {
+    background: var(--brand-deep); color: white; border: none; border-radius: 12px;
+    padding: 9px 20px; font-size: 0.9rem; cursor: pointer; font-weight: 800; font-family: var(--body-font);
+  }
+  .modal button:hover { filter: brightness(1.08); }
+  .modal button.neutral { background: var(--bg); color: var(--ink); }
+
+  .app-gate-backdrop {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center; z-index: 500;
+  }
+  .app-gate-backdrop .modal { box-shadow: 0 20px 50px -20px var(--shadow-tint); }
+  .app-gate-error {
+    color: var(--brand-deep); font-weight: 700; font-size: 0.85rem; margin: -6px 0 14px;
+    min-height: 1.1em;
+  }
+
+  .add-items-modal { text-align: left; max-width: 360px; }
+  .add-items-modal h3 { text-align: center; }
+  .add-items-modal textarea {
+    width: 100%; padding: 12px; font-size: 0.92rem; border: 2px solid var(--line); border-radius: 14px;
+    margin-bottom: 14px; font-family: var(--body-font); font-weight: 600; box-sizing: border-box;
+    resize: vertical; min-height: 110px; color: var(--ink);
+  }
+  .add-items-modal textarea:focus { outline: none; border-color: var(--brand); }
+
+  .list-settings-modal { text-align: left; max-width: 340px; }
+  .list-settings-modal h3 { text-align: center; }
+  .ls-colors { display: flex; gap: 10px; justify-content: center; margin: 4px 0 16px; }
+  .swatch {
+    width: 30px; height: 30px; border-radius: 50%; padding: 0; cursor: pointer;
+    border: 3px solid transparent; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .swatch.selected { border-color: var(--ink); }
+  .swatch.mustard { background: var(--mustard-dark); }
+  .swatch.sage { background: var(--sage-dark); }
+  .swatch.teal { background: var(--teal-dark); }
+  .swatch.clay { background: var(--clay-dark); }
+  .swatch.plum { background: var(--plum-dark); }
+
+  .ls-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .ls-row button {
+    flex: 1; background: var(--bg); color: var(--ink); border: 2px solid var(--line);
+    border-radius: 12px; padding: 8px 10px; font-size: 0.8rem; cursor: pointer;
+    font-weight: 700; font-family: var(--body-font);
+  }
+  .ls-row button:hover { border-color: var(--brand); }
+  .ls-row button.danger-ghost { color: var(--brand-deep); border-color: var(--brand-deep); background: none; }
+
+  .ls-password { margin-bottom: 16px; }
+  .ls-lock-status {
+    display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 0.85rem;
+    color: var(--brand-deep); margin-bottom: 8px;
+  }
+  .protect-btn {
+    width: 100%; background: none; border: 2px dashed var(--brand); color: var(--brand-deep);
+    border-radius: 12px; padding: 9px; font-size: 0.85rem; cursor: pointer; font-weight: 800;
+    font-family: var(--body-font); display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .protect-btn:hover { background: rgba(255,111,165,0.1); }
+
+  .list-settings-modal .ls-main-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+  .list-settings-modal .ls-main-actions button { flex: 1; }
+  .ls-delete-btn {
+    width: 100%; background: none; border: none; color: var(--ink-faint);
+    font-size: 0.78rem; font-weight: 700; text-decoration: underline; text-underline-offset: 2px;
+    cursor: pointer; padding: 4px; font-family: var(--body-font); text-align: center;
+  }
+  .ls-delete-btn:hover { color: var(--brand-deep); }
+
+  .photo-btn {
+    background: none; border: none; cursor: pointer;
+    line-height: 1; padding: 0 4px; opacity: 0.55; flex-shrink: 0;
+    display: flex; align-items: center; color: var(--_deep, var(--ink-soft));
+  }
+  .photo-btn:hover { opacity: 1; }
+  .photo-btn svg { width: 16px; height: 16px; }
+
+  .task-photos { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .photo-thumb {
+    width: 40px; height: 40px; object-fit: cover; border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12); cursor: pointer;
+  }
+
+  .notes-card {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 18px;
+    margin: 10px 0 22px;
+    position: relative;
+    box-shadow: 0 10px 24px -16px var(--shadow-tint);
+    border: 2px solid var(--line);
+  }
+  .notes-header { display: flex; flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 14px; }
+  .notes-header h2 { font-family: var(--display); font-weight: 600; font-size: 1.1rem; margin: 0; color: var(--brand-deep); }
+  .notes-header .btn-row { display: flex; gap: 6px; }
+  .notes-header button {
+    background: var(--brand); color: white; border: none; border-radius: 12px;
+    padding: 8px 6px; font-size: 0.78rem; cursor: pointer; font-family: var(--body-font); font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    flex: 1; min-width: 0;
+  }
+  .notes-header button.ghost {
+    background: transparent; border: 2px solid var(--brand); color: var(--brand-deep); padding: 6px 6px;
+  }
+  .notes-header button:hover { filter: brightness(1.08); }
+  .notes-header button.ghost:hover { background: rgba(255,111,165,0.1); filter: none; }
+  .notes-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 12px;
+  }
+  .note-item { text-align: center; }
+
+  .meal-plan-title { font-family: var(--display); font-weight: 600; font-size: 1.1rem; margin: 0 0 14px; color: var(--brand-deep); }
+  .meal-plan-list { display: flex; flex-direction: column; gap: 10px; }
+  .meal-plan-row { display: flex; align-items: center; gap: 10px; }
+  .meal-plan-day {
+    width: 44px; flex-shrink: 0; font-family: var(--body-font); font-weight: 800;
+    font-size: 0.78rem; color: var(--brand-deep); opacity: 0.75;
+  }
+  .meal-plan-input {
+    flex: 1; min-width: 0; padding: 9px 12px; font-size: 0.88rem; border: 2px solid var(--line);
+    border-radius: 12px; font-family: var(--body-font); font-weight: 700; box-sizing: border-box;
+    color: var(--ink); background: var(--bg);
+  }
+  .meal-plan-input:focus { outline: none; border-color: var(--brand); }
+  .meal-plan-dice {
+    background: none; border: none; cursor: pointer;
+    line-height: 1; padding: 4px; opacity: 0.6; flex-shrink: 0;
+    display: flex; align-items: center; color: var(--brand-deep);
+  }
+  .meal-plan-dice:hover { opacity: 1; }
+  .note-thumb {
+    width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px;
+    cursor: pointer; display: block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+  .note-text-tile {
+    width: 100%; aspect-ratio: 1; border-radius: 14px; cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    background: var(--brand); color: white;
+    display: flex; align-items: center; justify-content: center;
+    padding: 8px; font-size: 0.72rem; font-weight: 800; line-height: 1.25;
+    text-align: center; word-break: break-word; overflow: hidden;
+  }
+  .media-icon-tile {
+    background: var(--brand); color: white;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .note-caption { font-size: 0.74rem; font-weight: 700; margin-top: 5px; word-break: break-word; color: var(--ink); }
+  .note-meta { font-family: var(--body-font); font-weight: 700; font-size: 0.64rem; color: var(--ink-faint); margin-top: 1px; }
+
+  .album-section { margin-top: 12px; }
+  .album-label {
+    font-family: var(--body-font); font-weight: 800; font-size: 0.66rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--_deep, var(--brand-deep)); opacity: 0.6; margin-bottom: 6px;
+  }
+  .album-covers { display: flex; flex-direction: column; gap: 6px; }
+  .album-cover {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: rgba(255,255,255,0.55); border-radius: 12px; padding: 8px 10px;
+    cursor: pointer; border: none; width: 100%; text-align: left; font-family: var(--body-font);
+  }
+  .album-cover-main { display: flex; align-items: baseline; gap: 6px; min-width: 0; overflow: hidden; }
+  .album-cover-name {
+    font-size: 0.86rem; font-weight: 800; color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .album-cover-count {
+    font-weight: 700; font-size: 0.66rem; color: var(--_deep, var(--ink-soft)); opacity: 0.65; flex-shrink: 0;
+  }
+  .album-cover-gear {
+    background: none; border: none; cursor: pointer; padding: 3px;
+    color: var(--_deep, var(--brand-deep)); opacity: 0.55; flex-shrink: 0; display: flex; align-items: center;
+  }
+  .album-cover-gear:hover { opacity: 1; }
+  .album-add-cover {
+    border: 2px dashed var(--_deep, var(--brand-deep)); background: rgba(255,255,255,0.3);
+    color: var(--_deep, var(--brand-deep)); border-radius: 12px; padding: 8px 10px;
+    font-size: 0.82rem; font-weight: 800; cursor: pointer; font-family: var(--body-font);
+  }
+  .album-add-cover:hover { opacity: 0.85; }
+
+  .album-view-modal { max-width: 420px; text-align: left; }
+  .album-view-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+  .album-view-header h3 { margin: 0; text-align: left; flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .album-view-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .album-view-actions button {
+    background: none; border: none; cursor: pointer; padding: 4px; color: var(--brand-deep); opacity: 0.7;
+    display: flex; align-items: center;
+  }
+  .album-view-actions button:hover { opacity: 1; }
+  .album-select-share-btn, .album-select-cancel-btn {
+    background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 10px;
+    font-family: var(--body-font); font-weight: 800; font-size: 0.78rem; white-space: nowrap;
+  }
+  .album-select-share-btn { background: var(--brand-deep); color: white; }
+  .album-select-share-btn:hover { filter: brightness(1.08); }
+  .album-select-cancel-btn { color: var(--brand-deep); opacity: 0.7; }
+  .album-select-cancel-btn:hover { opacity: 1; }
+  .album-view-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; margin-bottom: 16px;
+    max-height: 55vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    align-content: start; padding: 2px; box-sizing: border-box;
+  }
+  .album-select-wrap { position: relative; }
+  .album-select-wrap:not(.selected) [data-photo-id] { opacity: 0.4; }
+  .select-check {
+    position: absolute; top: 4px; left: 4px; width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(255,255,255,0.85); border: 2px solid var(--brand-deep);
+    display: flex; align-items: center; justify-content: center; pointer-events: none;
+    box-sizing: border-box;
+  }
+  .album-select-wrap.selected .select-check { background: var(--brand-deep); }
+  .select-check svg { width: 12px; height: 12px; }
+  .album-view-thumb {
+    width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px;
+    cursor: pointer; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+  .media-bg-tile {
+    background-size: cover; background-position: center; background-repeat: no-repeat;
+  }
+  .video-thumb-tile { position: relative; }
+  .video-badge {
+    position: absolute; bottom: 4px; right: 4px; width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(0,0,0,0.55); color: white; display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .video-badge svg { width: 10px; height: 10px; }
+  .album-view-grid [data-photo-id] {
+    -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+  }
+  .album-view-grid .sortable-fallback { transform: scale(1.06); aspect-ratio: 1; }
+  .album-view-add {
+    width: 100%; aspect-ratio: 1; border-radius: 12px; border: 2px dashed var(--brand-deep);
+    background: rgba(255,111,165,0.08); color: var(--brand-deep); font-size: 1.4rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .album-view-empty { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 16px; }
+
+  #movePhotoModal { z-index: 70; } /* opens on top of the lightbox (z-index 60) — must sit above it */
+  .move-photo-modal { text-align: left; max-width: 340px; }
+  .move-photo-modal h3 { text-align: center; }
+  .move-photo-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; max-height: 50vh; overflow-y: auto; }
+  .move-photo-option {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+    background: var(--bg); border: 2px solid var(--line); border-radius: 12px;
+    padding: 8px 12px; cursor: pointer; font-family: var(--body-font); width: 100%; text-align: left;
+  }
+  .move-photo-option:hover { border-color: var(--brand); }
+  .move-photo-album-name { font-size: 0.86rem; font-weight: 800; color: var(--ink); }
+  .move-photo-list-name { font-size: 0.68rem; font-weight: 700; color: var(--ink-soft); }
+
+  .lightbox-backdrop { z-index: 60; padding: 20px; }
+  .lightbox { background: none; box-shadow: none; width: 100%; max-width: 480px; text-align: center; position: relative; }
+  .lightbox img, .lightbox video {
+    max-width: 100%; max-height: 65vh; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .lightbox audio {
+    width: 100%; border-radius: 40px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .lightbox-text-note {
+    background: var(--surface); color: var(--ink); border-radius: 18px; padding: 28px 22px;
+    font-family: var(--display); font-weight: 600; font-size: 1.3rem; line-height: 1.35;
+    text-wrap: balance; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    max-height: 55vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box;
+  }
+  .lightbox-edit-area {
+    width: 100%; box-sizing: border-box; min-height: 120px; max-height: 55vh;
+    border-radius: 18px; padding: 20px; font-family: var(--body-font); font-weight: 600;
+    font-size: 1rem; line-height: 1.4; border: none; resize: vertical;
+    background: var(--surface); color: var(--ink); margin-bottom: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .lightbox-edit-area:focus { outline: 2px solid var(--brand); }
+  .gallery-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0,0,0,0.45); color: white; border: none; border-radius: 50%;
+    width: 38px; height: 38px; font-size: 1.4rem; cursor: pointer; line-height: 1;
+    display: flex; align-items: center; justify-content: center; z-index: 2;
+  }
+  .gallery-nav:hover { background: rgba(0,0,0,0.65); }
+  .gallery-nav.prev { left: 2px; }
+  .gallery-nav.next { right: 2px; }
+  .gallery-position {
+    color: rgba(255,255,255,0.85); font-size: 0.7rem; font-weight: 700;
+    margin-top: 8px; font-family: var(--body-font);
+  }
+  .lightbox-caption { color: white; font-size: 0.85rem; font-weight: 600; margin: 14px 0; font-family: var(--body-font); }
+  .lightbox-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .lightbox-actions button {
+    border: none; border-radius: 12px; padding: 9px 18px; font-size: 0.85rem; cursor: pointer; font-weight: 800;
+    font-family: var(--body-font);
+  }
+  .lightbox-actions .danger { background: var(--brand-deep); color: white; }
+  .lightbox-actions .neutral { background: var(--surface); color: var(--ink); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .check, .add-items-btn, .photo-btn, .new-section button, .notes-header button { transition: transform 0.12s ease, filter 0.12s ease, background 0.12s ease, box-shadow 0.12s ease; }
+    .add-items-btn:active, .notes-header button:active { transform: scale(0.94); }
+    .check:active { transform: scale(0.88); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="appGate" class="app-gate-backdrop" style="display:none;">
+  <div class="modal">
+    <h3>Our List</h3>
+    <input id="appGateInput" type="password" placeholder="Household password" autocomplete="current-password">
+    <div class="app-gate-error" id="appGateError"></div>
+    <div><button onclick="submitAppPassword()">Unlock</button></div>
+  </div>
+</div>
+
+<div id="nameModal" class="modal-backdrop" style="display:none;">
+  <div class="modal">
+    <h3>Who's this?</h3>
+    <input id="nameInput" placeholder="Your name" maxlength="20">
+    <div><button onclick="saveName()">That's me</button></div>
+  </div>
+</div>
+
+<div id="listSettingsModal" class="modal-backdrop" style="display:none;">
+  <div class="modal list-settings-modal">
+    <h3>List settings</h3>
+    <input id="lsNameInput" placeholder="List name" maxlength="30">
+    <div class="ls-colors" id="lsColors"></div>
+    <div class="ls-row">
+      <button type="button" onclick="moveSection('up')">↑ Move up</button>
+      <button type="button" onclick="moveSection('down')">↓ Move down</button>
+    </div>
+    <div class="ls-password" id="lsPasswordSection"></div>
+    <div class="ls-main-actions">
+      <button type="button" onclick="saveListSettings()">Save</button>
+      <button type="button" class="neutral" onclick="closeListSettings()">Close</button>
+    </div>
+    <button type="button" class="ls-delete-btn" onclick="deleteSectionFromSettings()">Delete this list</button>
+  </div>
+</div>
+
+<div id="addItemsModal" class="modal-backdrop" style="display:none;">
+  <div class="modal add-items-modal">
+    <h3 id="addItemsTitle">Add items</h3>
+    <textarea id="addItemsTextarea" placeholder="One item per line…" rows="6"></textarea>
+    <div class="ls-main-actions">
+      <button type="button" onclick="submitAddItems()">Add</button>
+      <button type="button" class="neutral" onclick="closeAddItemsModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="dayModal" class="modal-backdrop" style="display:none;">
+  <div class="modal day-modal">
+    <h3 id="dayModalTitle">Day</h3>
+    <div class="day-slot">
+      <div class="day-slot-label">☀️ Day</div>
+      <ul id="daySlotEvents" class="event-list"></ul>
+      <button type="button" class="day-slot-add" onclick="addEvent('day')">+ Add</button>
+    </div>
+    <div class="day-slot">
+      <div class="day-slot-label">🌙 Evening</div>
+      <ul id="eveningSlotEvents" class="event-list"></ul>
+      <button type="button" class="day-slot-add" onclick="addEvent('evening')">+ Add</button>
+    </div>
+    <button type="button" class="neutral" onclick="closeDayModal()" style="width:100%;">Close</button>
+  </div>
+</div>
+
+<div id="scanModal" class="modal-backdrop" style="display:none;" onclick="closeScanModalIfBackdrop(event)">
+  <div class="modal scan-modal">
+    <h3>Scan a QR code</h3>
+    <video id="scanVideo" autoplay playsinline muted></video>
+    <div id="scanStatus" class="scan-status">Point your camera at a QR code</div>
+    <button type="button" class="neutral" onclick="closeScanModal()" style="width:100%;">Cancel</button>
+  </div>
+</div>
+
+<div id="voiceModal" class="modal-backdrop" style="display:none;" onclick="closeVoiceModalIfBackdrop(event)">
+  <div class="modal scan-modal">
+    <h3>Record a voice note</h3>
+    <div id="voiceTimer" class="voice-timer">0:00</div>
+    <div id="voiceStatus" class="scan-status">Tap record to start</div>
+    <audio id="voicePreview" controls style="display:none; width:100%; margin-bottom:14px;"></audio>
+    <button type="button" id="voiceRecordBtn" class="voice-record-btn" onclick="toggleVoiceRecording()"></button>
+    <div class="ls-main-actions" id="voiceSaveActions" style="display:none;">
+      <button type="button" onclick="saveVoiceNote()">Save</button>
+      <button type="button" class="neutral" onclick="discardVoiceRecording()">Re-record</button>
+    </div>
+    <button type="button" class="neutral" onclick="closeVoiceModal()" style="width:100%; margin-top:10px;">Cancel</button>
+  </div>
+</div>
+
+<div id="albumViewModal" class="modal-backdrop" style="display:none;" onclick="closeAlbumViewIfBackdrop(event)">
+  <div class="modal album-view-modal">
+    <div class="album-view-header">
+      <h3 id="albumViewTitle"></h3>
+      <div class="album-view-actions" id="albumViewActions">
+        <button type="button" id="albumViewShareBtn" onclick="startAlbumShareSelect()" aria-label="Share album"></button>
+        <button type="button" id="albumViewGearBtn" onclick="openAlbumSettingsFromView()" aria-label="Album settings"></button>
+      </div>
+    </div>
+    <div id="albumViewGrid" class="album-view-grid"></div>
+    <button type="button" class="neutral" onclick="closeAlbumView()" style="width:100%;">Close</button>
+  </div>
+</div>
+
+<div id="albumSettingsModal" class="modal-backdrop" style="display:none;">
+  <div class="modal list-settings-modal">
+    <h3>Album settings</h3>
+    <input id="asNameInput" placeholder="Album name" maxlength="30">
+    <div class="ls-row">
+      <button type="button" onclick="moveAlbum('up')">↑ Move up</button>
+      <button type="button" onclick="moveAlbum('down')">↓ Move down</button>
+    </div>
+    <div class="ls-main-actions">
+      <button type="button" onclick="saveAlbumSettings()">Save</button>
+      <button type="button" class="neutral" onclick="closeAlbumSettings()">Close</button>
+    </div>
+    <button type="button" class="ls-delete-btn" onclick="deleteAlbumFromSettings()">Delete this album</button>
+  </div>
+</div>
+
+<div id="movePhotoModal" class="modal-backdrop" style="display:none;" onclick="closeMovePhotoModalIfBackdrop(event)">
+  <div class="modal move-photo-modal">
+    <h3 id="movePhotoModalTitle">Move to album</h3>
+    <div id="movePhotoList" class="move-photo-list"></div>
+    <button type="button" class="neutral" onclick="closeMovePhotoModal()" style="width:100%;">Cancel</button>
+  </div>
+</div>
+
+<div id="addAppointmentModal" class="modal-backdrop" style="display:none;">
+  <div class="modal list-settings-modal">
+    <h3 id="appointmentModalTitle">New appointment</h3>
+    <input id="apName" placeholder="e.g. Hair appointment" maxlength="60">
+    <input id="apDate" type="date">
+    <input id="apTime" type="time">
+    <select id="apLead">
+      <option value="15">Remind 15 minutes before</option>
+      <option value="30">Remind 30 minutes before</option>
+      <option value="60" selected>Remind 1 hour before</option>
+      <option value="120">Remind 2 hours before</option>
+      <option value="1440">Remind 1 day before</option>
+      <option value="2880">Remind 2 days before</option>
+    </select>
+    <div class="ls-main-actions">
+      <button type="button" id="appointmentSubmitBtn" onclick="submitAppointment()">Add</button>
+      <button type="button" class="neutral" onclick="closeAddAppointmentModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>Our List</h1>
+    <div class="dots-deco">
+      <span style="background:var(--mustard-dark)"></span>
+      <span style="background:var(--sage-dark)"></span>
+      <span style="background:var(--teal-dark)"></span>
+      <span style="background:var(--clay-dark)"></span>
+      <span style="background:var(--plum-dark)"></span>
+    </div>
+  </header>
+
+  <div class="whoami">
+    <span id="youAre"></span>
+    <button onclick="changeName()">not you?</button>
+  </div>
+
+  <div class="view-switch">
+    <button class="view-tab active" id="tabLists" onclick="switchView('lists')">Lists</button>
+    <button class="view-tab" id="tabCalendar" onclick="switchView('calendar')">Calendar</button>
+    <button class="view-tab" id="tabMealPlanner" onclick="switchView('mealPlanner')">Meal Planner</button>
+    <button class="view-tab" id="tabAppointments" onclick="switchView('appointments')">Appointments</button>
+  </div>
+
+  <div id="listsView">
+    <div id="sections"></div>
+
+    <div class="new-section">
+      <button onclick="promptNewSection()">+ start a new list</button>
+    </div>
+
+    <div class="notes-card">
+      <div class="notes-header">
+        <h2>Notes &amp; Photos</h2>
+        <div class="btn-row">
+          <button class="ghost" onclick="addTextOnlyNote()">Note</button>
+          <button class="ghost" onclick="startScan()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M4 8V5a1 1 0 0 1 1-1h3M20 8V5a1 1 0 0 0-1-1h-3M4 16v3a1 1 0 0 0 1 1h3M20 16v3a1 1 0 0 1-1 1h-3M7 12h10"/></svg> Scan</button>
+          <button class="ghost" onclick="startVoiceRecording()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg> Voice</button>
+          <button onclick="startPhotoUpload(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="12" height="12"><path d="M12 5v14M5 12h14"/></svg> Photo</button>
+        </div>
+      </div>
+      <div class="notes-grid" id="notesGrid"></div>
+    </div>
+  </div>
+
+  <div id="calendarView" style="display:none;">
+    <div class="calendar-header">
+      <button type="button" onclick="changeMonth(-1)" aria-label="Previous month">‹</button>
+      <h2 id="calendarMonthLabel"></h2>
+      <button type="button" onclick="changeMonth(1)" aria-label="Next month">›</button>
+    </div>
+    <div class="calendar-weekdays">
+      <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
+
+  <div id="mealPlannerView" style="display:none;">
+    <div class="notes-card">
+      <h2 class="meal-plan-title">Meal Planner</h2>
+      <div class="meal-plan-list" id="mealPlanList"></div>
+    </div>
+  </div>
+
+  <div id="appointmentsView" style="display:none;">
+    <div class="notes-card">
+      <div class="notes-header">
+        <h2>Appointments</h2>
+        <div class="btn-row">
+          <button onclick="openAddAppointmentModal()">+ Add</button>
+        </div>
+      </div>
+      <ul class="tasks" id="appointmentsList"></ul>
+    </div>
+  </div>
+
+  <div class="build-footer" id="buildFooter"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<input type="file" id="photoInput" accept="image/*,video/*" style="display:none" onchange="handlePhotoSelected(event)">
+<input type="file" id="albumInput" accept="image/*,video/*" multiple style="display:none" onchange="handleAlbumFilesSelected(event)">
+
+<div id="lightboxBackdrop" class="modal-backdrop lightbox-backdrop" style="display:none;" onclick="closeLightboxIfBackdrop(event)">
+  <div class="lightbox">
+    <button id="galleryPrev" class="gallery-nav prev" onclick="galleryPrev()" aria-label="Previous">‹</button>
+    <img id="lightboxImg" src="" alt="">
+    <video id="lightboxVideo" src="" controls playsinline style="display:none;"></video>
+    <audio id="lightboxAudio" src="" controls style="display:none;"></audio>
+    <button id="galleryNext" class="gallery-nav next" onclick="galleryNext()" aria-label="Next">›</button>
+    <div id="galleryPosition" class="gallery-position"></div>
+    <div id="lightboxCaption" class="lightbox-caption"></div>
+    <textarea id="lightboxEditArea" class="lightbox-edit-area" style="display:none;" maxlength="4000"></textarea>
+    <div class="lightbox-actions" id="lightboxActions">
+      <button class="danger" onclick="deleteCurrentPhoto()">Delete</button>
+      <button class="neutral" onclick="startEditCaption()">Edit</button>
+      <button class="neutral" onclick="closeLightbox()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/jsQR.js"></script>
+<script src="/js/Sortable.min.js"></script>
+<script src="/js/panzoom.min.js"></script>
+<script>
+const API = '';
+const APP_BUILD = 'v52'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
+let appToken = localStorage.getItem('sharedtasks_app_token') || null;
+let appStarted = false; // guards against double-starting ensureName/fetchState/polling
+
+async function apiFetch(url, options = {}) {
+  options.headers = { ...(options.headers || {}), ...(appToken ? { 'X-App-Token': appToken } : {}) };
+  const res = await fetch(url, options);
+  if (res.status === 401) {
+    appToken = null;
+    localStorage.removeItem('sharedtasks_app_token');
+    showAppGate();
+    throw new Error('Login required');
+  }
+  return res;
+}
+
+function uploadUrl(filename) {
+  return `/uploads/${filename}` + (appToken ? `?token=${encodeURIComponent(appToken)}` : '');
+}
+
+function showAppGate() {
+  document.getElementById('appGate').style.display = 'flex';
+  document.getElementById('appGateError').innerText = '';
+  const input = document.getElementById('appGateInput');
+  input.value = '';
+  setTimeout(() => input.focus(), 50);
+}
+
+function hideAppGate() {
+  document.getElementById('appGate').style.display = 'none';
+}
+
+async function submitAppPassword() {
+  const password = document.getElementById('appGateInput').value;
+  if (!password) return;
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    if (!res.ok) {
+      document.getElementById('appGateError').innerText = 'Wrong password, try again.';
+      return;
+    }
+    const data = await res.json();
+    appToken = data.token;
+    if (appToken) localStorage.setItem('sharedtasks_app_token', appToken);
+    hideAppGate();
+    startApp();
+  } catch (e) {
+    document.getElementById('appGateError').innerText = 'Something went wrong, try again.';
+  }
+}
+
+function startApp() {
+  if (appStarted) return;
+  appStarted = true;
+  ensureName();
+  fetchState();
+  setInterval(fetchState, 4000);
+}
+
+async function initAuth() {
+  try {
+    const res = await fetch('/api/state', {
+      headers: appToken ? { 'X-App-Token': appToken } : {},
+    });
+    if (res.status === 401) {
+      showAppGate();
+      return;
+    }
+    startApp();
+  } catch (e) {
+    // network hiccup on first load — fall back to starting the app normally,
+    // fetchState()'s own polling/error handling takes it from there
+    startApp();
+  }
+}
+
+document.getElementById('appGateInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitAppPassword();
+});
+
+let state = { sections: [], activity: [], notes: [], events: [] };
+let myName = localStorage.getItem('sharedtasks_name') || '';
+let lastActivityId = null;
+let photosById = {};
+let taskSectionById = {};
+let albumSectionById = {};
+let pendingPhotoTaskId = undefined;
+let pendingAlbumId = null;
+let currentLightboxPhoto = null;
+let galleryContexts = {};
+let currentGalleryKey = null;
+let currentGalleryIndex = 0;
+let unlockedSections = {}; // sectionId -> token, JS-memory only (clears when the app is closed)
+
+// navigator.share() must fire shortly after the tap that triggered it (transient
+// activation) or mobile browsers reject it — but sharing needs the actual file
+// bytes first. Downloading on-demand at share time is often too slow. So photos
+// (cheap) get quietly pulled into this cache as soon as they're viewed, so by the
+// time Share is tapped the bytes are usually already here and share() fires
+// almost instantly. Videos are deliberately not auto-prefetched — too large to
+// download twice (once to view, once to cache) just in case they get shared.
+const shareBlobCache = new Map(); // photoId -> Blob
+const shareBlobPending = new Set(); // photoId currently being prefetched
+
+function prefetchShareBlob(p, allowAnyType) {
+  if (!p || !p.filename) return;
+  if (!allowAnyType && p.media_type !== 'photo') return;
+  if (shareBlobCache.has(p.id) || shareBlobPending.has(p.id)) return;
+  shareBlobPending.add(p.id);
+  apiFetch(uploadUrl(p.filename))
+    .then((res) => (res.ok ? res.blob() : null))
+    .then((blob) => { if (blob) shareBlobCache.set(p.id, blob); })
+    .catch(() => {})
+    .finally(() => shareBlobPending.delete(p.id));
+}
+let currentSettingsSectionId = null;
+let currentAlbumViewId = null;
+let currentSettingsAlbumId = null;
+let selectedColor = null;
+const COLOR_NAMES = ['mustard', 'sage', 'teal', 'clay', 'plum'];
+let calendarMonth = null; // Date, first-of-month currently displayed
+let selectedDate = null; // 'YYYY-MM-DD' for the open day modal
+
+const CAMERA_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg>';
+const CHECK_ICON = '<svg viewBox="0 0 12 12" fill="none" width="12" height="12"><path d="M2 6l3 3 5-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const PLUS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="12" height="12"><path d="M12 5v14M5 12h14"/></svg>';
+const GEAR_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 13.5a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V19.5a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H4.5a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9.5a1.65 1.65 0 0 0 1-1.51V4.5a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9.5a1.65 1.65 0 0 0 1.51 1H19.5a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+const LOCK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const SUN_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>';
+const MOON_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M20 14.5A9 9 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>';
+const SHARE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>';
+const DICE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>';
+const EDIT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+const SAVE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg>';
+const VIDEO_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="26" height="26"><circle cx="12" cy="12" r="10"/><path d="M10 8.5l6 3.5-6 3.5v-7z" fill="currentColor" stroke="none"/></svg>';
+const MIC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
+const STOP_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>';
+const MIC_ICON_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>';
+
+function mediaThumbHtml(p, cssClass, onclickAttr, asBackgroundDiv) {
+  if (p.media_type === 'video') {
+    if (p.thumb_filename) {
+      // a real frame pulled from the clip, same background-div approach as
+      // photos use (see the asBackgroundDiv note below) — plus a small play
+      // badge so it still reads as a video, not a photo
+      return `<div class="${cssClass} media-bg-tile video-thumb-tile" data-photo-id="${p.id}" style="background-image:url('${uploadUrl(p.thumb_filename)}')" onclick="${onclickAttr}"><span class="video-badge">${VIDEO_ICON}</span></div>`;
+    }
+    return `<div class="${cssClass} media-icon-tile" data-photo-id="${p.id}" onclick="${onclickAttr}">${VIDEO_ICON}</div>`;
+  }
+  if (p.media_type === 'voice') {
+    return `<div class="${cssClass} media-icon-tile" data-photo-id="${p.id}" onclick="${onclickAttr}">${MIC_ICON}</div>`;
+  }
+  if (asBackgroundDiv) {
+    // used where the tile is draggable: Android's long-press "save/copy image"
+    // menu is tied to real <img> elements on many Chrome versions and can
+    // bypass contextmenu preventDefault entirely — a div with a background
+    // image isn't recognised as "an image" by that handler, sidestepping the
+    // problem instead of trying to suppress an event that may never fire
+    return `<div class="${cssClass} media-bg-tile" data-photo-id="${p.id}" style="background-image:url('${uploadUrl(p.filename)}')" onclick="${onclickAttr}"></div>`;
+  }
+  return `<img class="${cssClass}" data-photo-id="${p.id}" draggable="false" src="${uploadUrl(p.filename)}" onclick="${onclickAttr}">`;
+}
+
+const DINNER_SUGGESTIONS = [
+  'Spaghetti bolognese', 'Chicken curry', 'Fish and chips', 'Fajitas', 'Roast chicken',
+  'Sausage and mash', 'Stir fry', 'Homemade pizza', 'Chilli con carne', 'Lasagne',
+  'Fish tacos', 'Chicken katsu curry', 'Beef stew', 'Cottage pie', 'Risotto',
+  'BBQ', 'Burgers', 'Thai green curry', 'Carbonara', 'Roast dinner',
+  'Paella', 'Chicken fajita bowl', 'Sunday roast leftovers', 'Pad thai', 'Shepherd\'s pie',
+  'Steak and salad', 'Curry night', 'Takeaway treat', 'Jacket potatoes', 'Quiche and salad',
+];
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.innerText = s;
+  return d.innerHTML;
+}
+
+function escapeAndLinkify(s) {
+  const escaped = escapeHtml(s);
+  return escaped.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+    let trailing = '';
+    const m = url.match(/[.,;:!?)\]}]+$/);
+    if (m) {
+      trailing = m[0];
+      url = url.slice(0, -trailing.length);
+    }
+    // escapeHtml leaves quotes untouched (they're inert in text content), but this
+    // value is about to sit inside an href="..." attribute, so quotes must be
+    // neutralized here too or a crafted URL (e.g. from a QR code) could break out
+    // of the attribute and inject markup/handlers.
+    const hrefSafe = url.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return `<a href="${hrefSafe}" target="_blank" rel="noopener noreferrer">${url}</a>${trailing}`;
+  });
+}
+
+function ensureName() {
+  if (!myName) {
+    document.getElementById('nameModal').style.display = 'flex';
+  } else {
+    document.getElementById('youAre').innerText = `You're ${myName}`;
+  }
+}
+
+function saveName() {
+  const v = document.getElementById('nameInput').value.trim();
+  if (!v) return;
+  myName = v;
+  localStorage.setItem('sharedtasks_name', v);
+  document.getElementById('nameModal').style.display = 'none';
+  document.getElementById('youAre').innerText = `You're ${myName}`;
+}
+
+function changeName() {
+  document.getElementById('nameInput').value = myName;
+  document.getElementById('nameModal').style.display = 'flex';
+}
+
+let lastStateJson = null;
+
+function unlockQueryString() {
+  const pairs = Object.entries(unlockedSections).map(([id, token]) => `${id}:${token}`);
+  return pairs.length ? '?unlock=' + encodeURIComponent(pairs.join(',')) : '';
+}
+
+async function fetchState() {
+  try {
+    const res = await apiFetch('/api/state' + unlockQueryString());
+    const data = await res.json();
+    const json = JSON.stringify(data);
+    if (json === lastStateJson) return; // nothing changed — don't disturb the DOM
+    lastStateJson = json;
+    render(data);
+  } catch (e) {
+    console.error('fetch failed', e);
+  }
+}
+
+function render(data, forceSectionsRender) {
+  const prevIds = new Set(state.activity.map(a => a.id));
+  state = data;
+
+  photosById = {};
+  taskSectionById = {};
+  albumSectionById = {};
+  galleryContexts = {};
+  data.sections.forEach(s => s.tasks.forEach(t => {
+    (t.photos || []).forEach(p => photosById[p.id] = p);
+    taskSectionById[t.id] = s.id;
+    if (t.photos && t.photos.length) galleryContexts['task-' + t.id] = t.photos;
+  }));
+  (data.notes || []).forEach(p => photosById[p.id] = p);
+  galleryContexts['notes'] = data.notes || [];
+  data.sections.forEach(s => {
+    (s.albums || []).forEach(a => {
+      albumSectionById[a.id] = s.id;
+      galleryContexts['album-' + a.id] = a.photos || [];
+      (a.photos || []).forEach(p => photosById[p.id] = p);
+    });
+  });
+
+  const sectionsEl = document.getElementById('sections');
+  if (forceSectionsRender || (!dragReorderActive && editingTaskId == null)) { // don't clobber an in-progress drag or text edit when a poll lands mid-gesture; explicit calls (entering/leaving edit mode) bypass that
+    sectionsEl.innerHTML = '';
+    data.sections.forEach(s => {
+      const card = document.createElement('div');
+      card.className = `card ${s.color}`;
+
+      if (s.locked) {
+        card.innerHTML = `
+          <div class="pin"></div>
+          <div class="card-header">
+            <h2>${LOCK_ICON} ${escapeHtml(s.name)}</h2>
+            <button class="settings-btn" onclick="openListSettings(${s.id})" aria-label="List settings">${GEAR_ICON}</button>
+          </div>
+          <div class="locked-body">
+            <div class="locked-count">${s.locked_count} item${s.locked_count === 1 ? '' : 's'} — locked</div>
+            <button class="unlock-btn" onclick="unlockSectionPrompt(${s.id})">Unlock</button>
+          </div>
+        `;
+        sectionsEl.appendChild(card);
+        return;
+      }
+
+      const openCount = s.tasks.filter(t => !t.done).length;
+      card.innerHTML = `
+        <div class="pin"></div>
+        <div class="card-header">
+          <h2>${s.protected ? LOCK_ICON + ' ' : ''}${escapeHtml(s.name)}</h2>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="count">${openCount} open</span>
+            <button class="settings-btn" onclick="openListSettings(${s.id})" aria-label="List settings">${GEAR_ICON}</button>
+          </div>
+        </div>
+        <ul class="tasks">
+          ${s.tasks.length === 0 ? '<li class="empty" style="border:none;">Nothing here yet</li>' :
+            s.tasks.map(t => t.id === editingTaskId ? `
+              <li data-task-id="${t.id}">
+                <div class="task-body">
+                  <input type="text" class="task-edit-input" id="taskEditInput" value="${escapeHtml(t.text)}" maxlength="500"
+                    onkeydown="if(event.key==='Enter'){event.preventDefault();saveEditTask(${t.id});}else if(event.key==='Escape'){cancelEditTask();}">
+                </div>
+                <button class="photo-btn" title="Save" onclick="saveEditTask(${t.id})">${SAVE_ICON}</button>
+                <button class="del-task" title="Cancel" onclick="cancelEditTask()">&times;</button>
+              </li>
+            ` : `
+              <li class="${t.done ? 'done' : ''}" data-task-id="${t.id}">
+                <button class="check" onclick="toggleTask(${t.id}, ${!t.done})">${t.done ? CHECK_ICON : ''}</button>
+                <div class="task-body">
+                  <div class="task-text">${escapeHtml(t.text)}</div>
+                  <div class="task-meta">${t.done ? 'done by ' + escapeHtml(t.done_by || '') : 'added by ' + escapeHtml(t.added_by)}</div>
+                  ${(t.photos && t.photos.length) ? `<div class="task-photos">${t.photos.map(p => mediaThumbHtml(p, 'photo-thumb', `openGallery('task-${t.id}', ${p.id})`)).join('')}</div>` : ''}
+                </div>
+                <button class="photo-btn edit-task" title="Edit" onclick="startEditTask(${t.id})">${EDIT_ICON}</button>
+                <button class="photo-btn" title="Add photo" onclick="startPhotoUpload(${t.id})">${CAMERA_ICON}</button>
+                <button class="del-task" onclick="deleteTask(${t.id})">&times;</button>
+              </li>
+            `).join('')}
+        </ul>
+        <button type="button" class="add-items-btn" onclick="openAddItemsModal(${s.id}, '${escapeHtml(s.name)}')">+ Add</button>
+        <div class="album-section">
+          <div class="album-label">Albums</div>
+          <div class="album-covers">
+            ${(s.albums || []).map(a => `
+              <button type="button" class="album-cover" onclick="openAlbumView(${a.id})">
+                <span class="album-cover-main">
+                  <span class="album-cover-name">${escapeHtml(a.name)}</span>
+                  <span class="album-cover-count">${(a.photos || []).length} photo${(a.photos || []).length === 1 ? '' : 's'}</span>
+                </span>
+                <span class="album-cover-gear" onclick="event.stopPropagation(); openAlbumSettings(${a.id})" role="button" aria-label="Album settings">${GEAR_ICON}</span>
+              </button>
+            `).join('')}
+            <button type="button" class="album-add-cover" onclick="createAlbumPrompt(${s.id})">+ New album</button>
+          </div>
+        </div>
+      `;
+      sectionsEl.appendChild(card);
+
+      const taskList = card.querySelector('ul.tasks');
+      if (taskList) initSortable(taskList, '[data-task-id]', (c) => saveTaskOrder(s.id, c));
+    });
+  }
+
+  const notesGrid = document.getElementById('notesGrid');
+  notesGrid.innerHTML = (data.notes && data.notes.length) ? data.notes.map(p => `
+    <div class="note-item">
+      ${p.filename
+        ? `${mediaThumbHtml(p, 'note-thumb', `openGallery('notes', ${p.id})`)}
+           ${p.caption ? `<div class="note-caption">${escapeAndLinkify(p.caption)}</div>` : ''}`
+        : `<div class="note-text-tile" onclick="openGallery('notes', ${p.id})">${escapeHtml(p.caption || '')}</div>`
+      }
+      <div class="note-meta">${escapeHtml(p.added_by)}</div>
+    </div>
+  `).join('') : '<div class="empty" style="border:none;">No notes yet — tap "Note" or "Photo" to pin one</div>';
+
+  if (data.activity.length > 0) {
+    const newest = data.activity[0];
+    if (lastActivityId !== null && !prevIds.has(newest.id) && !newest.message.startsWith(myName + ' ')) {
+      showToast(newest.message);
+    }
+    lastActivityId = newest.id;
+  }
+
+  if (calendarMonth) renderCalendar();
+  if (selectedDate) renderDaySlots();
+  renderMealPlan(data);
+  renderAppointments(data);
+
+  if (currentAlbumViewId != null) {
+    if (albumSectionById[currentAlbumViewId] != null) {
+      renderAlbumViewGrid(currentAlbumViewId);
+    } else {
+      closeAlbumView(); // the album was deleted (maybe from another device)
+    }
+  }
+}
+
+function showToast(msg, duration) {
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(() => t.classList.remove('show'), duration || 3500);
+}
+
+let addItemsSectionId = null;
+
+function openAddItemsModal(sectionId, sectionName) {
+  if (!myName) { ensureName(); return; }
+  addItemsSectionId = sectionId;
+  document.getElementById('addItemsTitle').innerText = `Add to ${sectionName}`;
+  const ta = document.getElementById('addItemsTextarea');
+  ta.value = '';
+  document.getElementById('addItemsModal').style.display = 'flex';
+  setTimeout(() => ta.focus(), 50);
+}
+
+function closeAddItemsModal() {
+  document.getElementById('addItemsModal').style.display = 'none';
+  addItemsSectionId = null;
+}
+
+async function submitAddItems() {
+  const sectionId = addItemsSectionId;
+  if (sectionId == null) return;
+  const raw = document.getElementById('addItemsTextarea').value;
+  const texts = raw.split('\n').map(s => s.trim()).filter(Boolean);
+  closeAddItemsModal();
+  if (texts.length === 0) return;
+  await apiFetch('/api/tasks/bulk', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ section_id: sectionId, texts, added_by: myName, unlock_token: unlockedSections[sectionId] || null })
+  });
+  fetchState();
+}
+
+async function toggleTask(taskId, done) {
+  if (!myName) { ensureName(); return; }
+  const sectionId = taskSectionById[taskId];
+  await apiFetch(`/api/tasks/${taskId}`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ done, by: myName, unlock_token: unlockedSections[sectionId] || null })
+  });
+  fetchState();
+}
+
+async function deleteTask(taskId) {
+  const sectionId = taskSectionById[taskId];
+  const token = unlockedSections[sectionId];
+  const qs = token ? `?unlock_token=${encodeURIComponent(token)}` : '';
+  await apiFetch(`/api/tasks/${taskId}${qs}`, { method: 'DELETE' });
+  fetchState();
+}
+
+function startEditTask(taskId) {
+  if (!myName) { ensureName(); return; }
+  editingTaskId = taskId;
+  render(state, true); // re-render immediately in edit mode, bypassing the just-set guard, don't wait for the next poll
+  const input = document.getElementById('taskEditInput');
+  if (input) { input.focus(); input.select(); }
+}
+
+function cancelEditTask() {
+  editingTaskId = null;
+  render(state, true);
+}
+
+async function saveEditTask(taskId) {
+  const input = document.getElementById('taskEditInput');
+  const newText = input ? input.value.trim() : '';
+  if (!newText) { showToast("A task can't be empty"); return; }
+  const sectionId = taskSectionById[taskId];
+  const res = await apiFetch(`/api/tasks/${taskId}/text`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ text: newText, by: myName, unlock_token: unlockedSections[sectionId] || null })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    showToast(err.detail || "Couldn't save that edit");
+    return;
+  }
+  editingTaskId = null;
+  fetchState();
+}
+
+function startPhotoUpload(taskId) {
+  if (!myName) { ensureName(); return; }
+  pendingPhotoTaskId = taskId;
+  document.getElementById('photoInput').click();
+}
+
+async function handlePhotoSelected(e) {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+
+  let caption = '';
+  if (pendingPhotoTaskId === null) {
+    caption = prompt('Add a caption (optional)') || '';
+  }
+
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('added_by', myName);
+  if (pendingPhotoTaskId !== null) {
+    fd.append('task_id', pendingPhotoTaskId);
+    const sectionId = taskSectionById[pendingPhotoTaskId];
+    if (unlockedSections[sectionId]) fd.append('unlock_token', unlockedSections[sectionId]);
+  }
+  if (caption.trim()) fd.append('caption', caption.trim());
+
+  showToast('Uploading photo…');
+  try {
+    const res = await apiFetch('/api/photos', { method: 'POST', body: fd });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showToast(err.detail || 'Upload failed');
+    }
+  } catch (err) {
+    showToast('Upload failed — check your connection');
+  }
+  fetchState();
+}
+
+async function postTextNote(text) {
+  const fd = new FormData();
+  fd.append('added_by', myName);
+  fd.append('caption', text.trim());
+
+  showToast('Posting note…');
+  try {
+    const res = await apiFetch('/api/photos', { method: 'POST', body: fd });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showToast(err.detail || 'Failed to post note');
+    }
+  } catch (err) {
+    showToast('Failed — check your connection');
+  }
+  fetchState();
+}
+
+async function addTextOnlyNote() {
+  if (!myName) { ensureName(); return; }
+  const text = prompt('Write your note');
+  if (!text || !text.trim()) return;
+  postTextNote(text);
+}
+
+// ---- QR scanning ----
+
+let scanStream = null;
+let scanRAF = null;
+
+async function startScan() {
+  if (!myName) { ensureName(); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast("This browser can't access the camera");
+    return;
+  }
+  const status = document.getElementById('scanStatus');
+  status.innerText = 'Point your camera at a QR code';
+  document.getElementById('scanModal').style.display = 'flex';
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const video = document.getElementById('scanVideo');
+    video.srcObject = scanStream;
+    await video.play();
+    scanRAF = requestAnimationFrame(scanFrame);
+  } catch (err) {
+    status.innerText = "Couldn't access the camera — check permissions";
+  }
+}
+
+function scanFrame() {
+  const video = document.getElementById('scanVideo');
+  if (!scanStream) return;
+  if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+    scanRAF = requestAnimationFrame(scanFrame);
+    return;
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const code = jsQR(imageData.data, imageData.width, imageData.height);
+  if (code && code.data) {
+    onScanSuccess(code.data);
+  } else {
+    scanRAF = requestAnimationFrame(scanFrame);
+  }
+}
+
+function stopScan() {
+  if (scanRAF) cancelAnimationFrame(scanRAF);
+  scanRAF = null;
+  if (scanStream) {
+    scanStream.getTracks().forEach(t => t.stop());
+    scanStream = null;
+  }
+}
+
+function closeScanModal() {
+  stopScan();
+  document.getElementById('scanModal').style.display = 'none';
+}
+
+function closeScanModalIfBackdrop(e) {
+  if (e.target.id === 'scanModal') closeScanModal();
+}
+
+function onScanSuccess(text) {
+  closeScanModal();
+  const value = prompt('Add this to your notes?', text);
+  if (!value || !value.trim()) return;
+  postTextNote(value);
+}
+
+// ---- voice notes ----
+
+let voiceMediaRecorder = null;
+let voiceStream = null;
+let voiceChunks = [];
+let voiceBlob = null;
+let voiceStartTime = null;
+let voiceTimerInterval = null;
+
+function startVoiceRecording() {
+  if (!myName) { ensureName(); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast("This browser can't access the microphone");
+    return;
+  }
+  voiceBlob = null;
+  document.getElementById('voiceStatus').innerText = 'Tap record to start';
+  document.getElementById('voiceTimer').innerText = '0:00';
+  document.getElementById('voicePreview').style.display = 'none';
+  document.getElementById('voiceSaveActions').style.display = 'none';
+  const btn = document.getElementById('voiceRecordBtn');
+  btn.style.display = '';
+  btn.classList.remove('recording');
+  btn.innerHTML = `${MIC_ICON_SM} Record`;
+  document.getElementById('voiceModal').style.display = 'flex';
+}
+
+async function toggleVoiceRecording() {
+  if (voiceMediaRecorder && voiceMediaRecorder.state === 'recording') {
+    voiceMediaRecorder.stop();
+    return;
+  }
+  const status = document.getElementById('voiceStatus');
+  try {
+    voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    status.innerText = "Couldn't access the microphone — check permissions";
+    return;
+  }
+  voiceChunks = [];
+  voiceMediaRecorder = new MediaRecorder(voiceStream);
+  voiceMediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) voiceChunks.push(e.data); };
+  voiceMediaRecorder.onstop = () => {
+    voiceStream.getTracks().forEach(t => t.stop());
+    voiceStream = null;
+    clearInterval(voiceTimerInterval);
+    voiceBlob = new Blob(voiceChunks, { type: voiceMediaRecorder.mimeType || 'audio/webm' });
+    const preview = document.getElementById('voicePreview');
+    preview.src = URL.createObjectURL(voiceBlob);
+    preview.style.display = 'block';
+    document.getElementById('voiceRecordBtn').style.display = 'none';
+    document.getElementById('voiceSaveActions').style.display = 'flex';
+    status.innerText = 'Recording complete — have a listen';
+  };
+  voiceMediaRecorder.start();
+  voiceStartTime = Date.now();
+  status.innerText = 'Recording…';
+  const btn = document.getElementById('voiceRecordBtn');
+  btn.classList.add('recording');
+  btn.innerHTML = `${STOP_ICON} Stop`;
+  voiceTimerInterval = setInterval(() => {
+    const secs = Math.floor((Date.now() - voiceStartTime) / 1000);
+    document.getElementById('voiceTimer').innerText = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+  }, 250);
+}
+
+function discardVoiceRecording() {
+  voiceBlob = null;
+  document.getElementById('voicePreview').style.display = 'none';
+  document.getElementById('voiceSaveActions').style.display = 'none';
+  document.getElementById('voiceTimer').innerText = '0:00';
+  document.getElementById('voiceStatus').innerText = 'Tap record to start';
+  const btn = document.getElementById('voiceRecordBtn');
+  btn.style.display = '';
+  btn.classList.remove('recording');
+  btn.innerHTML = `${MIC_ICON_SM} Record`;
+}
+
+async function saveVoiceNote() {
+  if (!voiceBlob) return;
+  const fd = new FormData();
+  fd.append('added_by', myName);
+  fd.append('file', voiceBlob, `voice-${Date.now()}.webm`);
+
+  showToast('Saving voice note…');
+  try {
+    const res = await apiFetch('/api/photos', { method: 'POST', body: fd });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showToast(err.detail || 'Failed to save voice note');
+    }
+  } catch (err) {
+    showToast('Failed — check your connection');
+  }
+  closeVoiceModal();
+  fetchState();
+}
+
+function closeVoiceModal() {
+  if (voiceMediaRecorder && voiceMediaRecorder.state === 'recording') voiceMediaRecorder.stop();
+  if (voiceStream) { voiceStream.getTracks().forEach(t => t.stop()); voiceStream = null; }
+  clearInterval(voiceTimerInterval);
+  document.getElementById('voiceModal').style.display = 'none';
+}
+
+function closeVoiceModalIfBackdrop(e) {
+  if (e.target.id === 'voiceModal') closeVoiceModal();
+}
+
+function openGallery(key, photoId) {
+  const list = galleryContexts[key];
+  if (!list || !list.length) return;
+  const idx = list.findIndex(p => p.id === photoId);
+  currentGalleryKey = key;
+  currentGalleryIndex = idx >= 0 ? idx : 0;
+  showGalleryPhoto();
+}
+
+function showGalleryPhoto() {
+  const list = galleryContexts[currentGalleryKey];
+  if (!list || !list.length) { closeLightbox(); return; }
+  if (currentGalleryIndex < 0) currentGalleryIndex = list.length - 1;
+  if (currentGalleryIndex >= list.length) currentGalleryIndex = 0;
+  const p = list[currentGalleryIndex];
+  currentLightboxPhoto = p;
+  prefetchShareBlob(p);
+  resetLightboxZoom(); // never carry zoom/pan over from the previous photo
+
+  const img = document.getElementById('lightboxImg');
+  const video = document.getElementById('lightboxVideo');
+  const audio = document.getElementById('lightboxAudio');
+  const caption = document.getElementById('lightboxCaption');
+
+  // stop any playback before switching what's shown
+  video.pause(); video.style.display = 'none'; video.src = '';
+  audio.pause(); audio.style.display = 'none'; audio.src = '';
+  img.style.display = 'none'; img.src = '';
+
+  if (p.filename && p.media_type === 'video') {
+    video.style.display = '';
+    video.src = uploadUrl(p.filename);
+    caption.className = 'lightbox-caption';
+    caption.innerHTML = p.caption
+      ? `${escapeAndLinkify(p.caption)} — ${escapeHtml(p.added_by)}`
+      : `Added by ${escapeHtml(p.added_by)}`;
+  } else if (p.filename && p.media_type === 'voice') {
+    audio.style.display = '';
+    audio.src = uploadUrl(p.filename);
+    caption.className = 'lightbox-caption';
+    caption.innerHTML = p.caption
+      ? `${escapeAndLinkify(p.caption)} — ${escapeHtml(p.added_by)}`
+      : `Voice note from ${escapeHtml(p.added_by)}`;
+  } else if (p.filename) {
+    img.style.display = '';
+    img.src = uploadUrl(p.filename);
+    caption.className = 'lightbox-caption';
+    caption.innerHTML = p.caption
+      ? `${escapeAndLinkify(p.caption)} — ${escapeHtml(p.added_by)}`
+      : `Added by ${escapeHtml(p.added_by)}`;
+  } else {
+    caption.className = 'lightbox-text-note';
+    caption.innerHTML = `${escapeAndLinkify(p.caption || '')}<div style="font-family:var(--body-font); font-weight:700; font-size:0.72rem; margin-top:14px; opacity:0.6;">— ${escapeHtml(p.added_by)}</div>`;
+  }
+
+  const multi = list.length > 1;
+  document.getElementById('galleryPrev').style.visibility = multi ? 'visible' : 'hidden';
+  document.getElementById('galleryNext').style.visibility = multi ? 'visible' : 'hidden';
+  document.getElementById('galleryPosition').innerText = multi ? `${currentGalleryIndex + 1} / ${list.length}` : '';
+
+  // always land back in view mode — never carry an in-progress edit across
+  // photo navigation or a background refresh
+  document.getElementById('lightboxEditArea').style.display = 'none';
+  caption.style.display = '';
+  restoreLightboxActions();
+
+  document.getElementById('lightboxBackdrop').style.display = 'flex';
+}
+
+function restoreLightboxActions() {
+  const isAlbumPhoto = currentGalleryKey && currentGalleryKey.startsWith('album-');
+  const moveBtns = isAlbumPhoto
+    ? `<button class="neutral" onclick="openMovePhotoModal('move')">Move</button>
+       <button class="neutral" onclick="openMovePhotoModal('copy')">Copy</button>`
+    : '';
+  const shareBtn = (currentLightboxPhoto && currentLightboxPhoto.filename)
+    ? `<button class="neutral" onclick="shareCurrentPhoto()">Share</button>`
+    : '';
+  document.getElementById('lightboxActions').innerHTML = `
+    <button class="danger" onclick="deleteCurrentPhoto()">Delete</button>
+    <button class="neutral" onclick="startEditCaption()">Edit</button>
+    ${shareBtn}
+    ${moveBtns}
+    <button class="neutral" onclick="closeLightbox()">Close</button>
+  `;
+}
+
+function shareCurrentPhoto() {
+  const p = currentLightboxPhoto;
+  if (!p || !p.filename) { showToast('Nothing to share'); return; }
+  if (!navigator.share) { showToast("Sharing isn't supported on this browser"); return; }
+
+  const cachedBlob = shareBlobCache.get(p.id);
+  if (cachedBlob) {
+    // fast path — already have the bytes, so build the File and call share()
+    // synchronously in the exact same tick as the tap. Even a single `await`
+    // here (crossing one microtask) was apparently enough on some phones to
+    // make the browser stop treating this as a direct response to the tap.
+    const type = cachedBlob.type || guessMimeFromFilename(p.filename) || 'application/octet-stream';
+    const file = new File([cachedBlob], p.filename, { type });
+    if (navigator.canShare && !navigator.canShare({ files: [file] })) {
+      showToast("This file can't be shared this way");
+      return;
+    }
+    navigator.share({ files: [file], title: p.caption || 'Shared from Our List' }).catch((err) => {
+      if (err && err.name === 'AbortError') return;
+      showToast(shareErrorToast(err, "Couldn't share that"), 8000);
+    });
+    return;
+  }
+
+  // not cached yet — normally only videos, which aren't auto-prefetched.
+  // Falls back to fetching first, which does risk the activation window on a
+  // slow connection, but there's no bytes to share synchronously otherwise.
+  showToast('Preparing to share…');
+  (async () => {
+    try {
+      const file = await fetchAsShareFile(p);
+      if (navigator.canShare && !navigator.canShare({ files: [file] })) {
+        showToast("This file can't be shared this way");
+        return;
+      }
+      await navigator.share({ files: [file], title: p.caption || 'Shared from Our List' });
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+      showToast(shareErrorToast(err, "Couldn't share that"), 8000);
+    }
+  })();
+}
+
+let movePhotoMode = 'move';
+
+function openMovePhotoModal(mode) {
+  if (!currentLightboxPhoto || !currentGalleryKey || !currentGalleryKey.startsWith('album-')) return;
+  movePhotoMode = mode || 'move';
+  const currentAlbumId = parseInt(currentGalleryKey.slice(6));
+  const options = [];
+  state.sections.forEach(s => {
+    (s.albums || []).forEach(a => {
+      if (a.id !== currentAlbumId) options.push({ id: a.id, name: a.name, listName: s.name, sectionId: s.id });
+    });
+  });
+  const verb = movePhotoMode === 'copy' ? 'copy' : 'move';
+  if (!options.length) { showToast(`No other albums to ${verb} to`); return; }
+  document.getElementById('movePhotoModalTitle').innerText = movePhotoMode === 'copy' ? 'Copy to album' : 'Move to album';
+  document.getElementById('movePhotoList').innerHTML = options.map(o => `
+    <button type="button" class="move-photo-option" onclick="movePhotoTo(${o.id}, ${o.sectionId})">
+      <span class="move-photo-album-name">${escapeHtml(o.name)}</span>
+      <span class="move-photo-list-name">${escapeHtml(o.listName)}</span>
+    </button>
+  `).join('');
+  document.getElementById('movePhotoModal').style.display = 'flex';
+}
+
+function closeMovePhotoModal() {
+  document.getElementById('movePhotoModal').style.display = 'none';
+}
+
+function closeMovePhotoModalIfBackdrop(e) {
+  if (e.target.id === 'movePhotoModal') closeMovePhotoModal();
+}
+
+async function movePhotoTo(destAlbumId, destSectionId) {
+  if (!currentLightboxPhoto) return;
+  const sourceSectionId = currentContextSectionId();
+  const sourceToken = sourceSectionId ? unlockedSections[sourceSectionId] : null;
+  const destToken = unlockedSections[destSectionId] || null;
+  const endpoint = movePhotoMode === 'copy' ? 'copy' : 'move';
+  await apiFetch(`/api/photos/${currentLightboxPhoto.id}/${endpoint}`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ album_id: destAlbumId, unlock_token: sourceToken, dest_unlock_token: destToken }),
+  });
+  closeMovePhotoModal();
+  if (movePhotoMode === 'move') {
+    closeLightbox();
+  } else {
+    showToast('Copied to album');
+  }
+  fetchState();
+}
+
+function startEditCaption() {
+  if (!currentLightboxPhoto) return;
+  document.getElementById('lightboxCaption').style.display = 'none';
+  const area = document.getElementById('lightboxEditArea');
+  area.value = currentLightboxPhoto.caption || '';
+  area.style.display = 'block';
+  area.focus();
+  document.getElementById('lightboxActions').innerHTML = `
+    <button class="neutral" onclick="saveCaptionEdit()">Save</button>
+    <button class="neutral" onclick="cancelCaptionEdit()">Cancel</button>
+  `;
+}
+
+function cancelCaptionEdit() {
+  showGalleryPhoto(); // discards the textarea and re-renders the current photo in view mode
+}
+
+async function saveCaptionEdit() {
+  if (!currentLightboxPhoto) return;
+  const newCaption = document.getElementById('lightboxEditArea').value.trim();
+  if (!currentLightboxPhoto.filename && !newCaption) {
+    showToast("A note can't be empty");
+    return;
+  }
+  const sectionId = currentContextSectionId();
+  const token = sectionId ? unlockedSections[sectionId] : null;
+  const res = await apiFetch(`/api/photos/${currentLightboxPhoto.id}`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ caption: newCaption, unlock_token: token }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    showToast(err.detail || "Couldn't save that edit");
+    return;
+  }
+  // update local state immediately so the lightbox reflects the edit without
+  // waiting for the next background poll
+  currentLightboxPhoto.caption = newCaption || null;
+  const list = galleryContexts[currentGalleryKey];
+  if (list) {
+    const match = list.find(p => p.id === currentLightboxPhoto.id);
+    if (match) match.caption = newCaption || null;
+  }
+  showGalleryPhoto();
+  fetchState();
+}
+
+function galleryPrev() { currentGalleryIndex--; showGalleryPhoto(); }
+function galleryNext() { currentGalleryIndex++; showGalleryPhoto(); }
+
+function closeLightbox() {
+  document.getElementById('lightboxBackdrop').style.display = 'none';
+  document.getElementById('lightboxVideo').pause();
+  document.getElementById('lightboxAudio').pause();
+  currentLightboxPhoto = null;
+  currentGalleryKey = null;
+  resetLightboxZoom();
+}
+
+function closeLightboxIfBackdrop(e) {
+  if (e.target.id === 'lightboxBackdrop') closeLightbox();
+}
+
+function currentContextSectionId() {
+  if (!currentGalleryKey) return null;
+  if (currentGalleryKey.startsWith('album-')) {
+    const albumId = parseInt(currentGalleryKey.slice(6));
+    return albumSectionById[albumId] || null;
+  }
+  if (currentGalleryKey.startsWith('task-')) {
+    const taskId = parseInt(currentGalleryKey.slice(5));
+    return taskSectionById[taskId] || null;
+  }
+  return null;
+}
+
+async function deleteCurrentPhoto() {
+  if (!currentLightboxPhoto) return;
+  const MEDIA_LABELS = { photo: 'photo', video: 'video', voice: 'voice note' };
+  const label = currentLightboxPhoto.filename ? (MEDIA_LABELS[currentLightboxPhoto.media_type] || 'photo') : 'note';
+  if (!confirm(`Delete this ${label}?`)) return;
+  const sectionId = currentContextSectionId();
+  const token = sectionId ? unlockedSections[sectionId] : null;
+  const qs = token ? `?unlock_token=${encodeURIComponent(token)}` : '';
+  await apiFetch(`/api/photos/${currentLightboxPhoto.id}${qs}`, { method: 'DELETE' });
+  closeLightbox();
+  fetchState();
+}
+
+// ---- list settings (rename, recolor, reorder, password) ----
+
+function openListSettings(sectionId) {
+  const s = state.sections.find(x => x.id === sectionId);
+  if (!s) return;
+  currentSettingsSectionId = sectionId;
+  document.getElementById('lsNameInput').value = s.name;
+  renderColorSwatches(s.color);
+  renderPasswordSection(s);
+  document.getElementById('listSettingsModal').style.display = 'flex';
+}
+
+function closeListSettings() {
+  document.getElementById('listSettingsModal').style.display = 'none';
+  currentSettingsSectionId = null;
+}
+
+function renderColorSwatches(current) {
+  selectedColor = current;
+  document.getElementById('lsColors').innerHTML = COLOR_NAMES.map(c => `
+    <button type="button" class="swatch ${c} ${c === current ? 'selected' : ''}" onclick="selectColor('${c}')" aria-label="${c}"></button>
+  `).join('');
+}
+
+function selectColor(c) {
+  selectedColor = c;
+  document.querySelectorAll('#lsColors .swatch').forEach(el => el.classList.remove('selected'));
+  const match = document.querySelector(`#lsColors .swatch.${c}`);
+  if (match) match.classList.add('selected');
+}
+
+function renderPasswordSection(s) {
+  const el = document.getElementById('lsPasswordSection');
+  el.innerHTML = s.protected ? `
+      <div class="ls-lock-status">${LOCK_ICON} Protected</div>
+      <div class="ls-row">
+        <button type="button" onclick="changeListPassword()">Change password</button>
+        <button type="button" class="danger-ghost" onclick="removeListPassword()">Remove password</button>
+      </div>
+    ` : `
+      <button type="button" class="protect-btn" onclick="setListPassword()">${LOCK_ICON} Protect this list</button>
+    `;
+}
+
+async function saveListSettings() {
+  const name = document.getElementById('lsNameInput').value.trim();
+  if (!name) { showToast("Name can't be empty"); return; }
+  await apiFetch(`/api/sections/${currentSettingsSectionId}`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name, color: selectedColor })
+  });
+  closeListSettings();
+  fetchState();
+}
+
+async function moveSection(direction) {
+  if (!currentSettingsSectionId) return;
+  await apiFetch(`/api/sections/${currentSettingsSectionId}/move`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ direction })
+  });
+  fetchState();
+}
+
+async function setListPassword() {
+  const pw = prompt('Set a password for this list');
+  if (!pw || !pw.trim()) return;
+  const res = await apiFetch(`/api/sections/${currentSettingsSectionId}/protection`, {
+    method: 'PUT', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ new_password: pw.trim() })
+  });
+  if (!res.ok) { showToast('Failed to set password'); return; }
+  showToast('List protected');
+  closeListSettings();
+  fetchState();
+}
+
+async function changeListPassword() {
+  const current = prompt('Current password');
+  if (current === null) return;
+  const next = prompt('New password');
+  if (!next || !next.trim()) return;
+  const res = await apiFetch(`/api/sections/${currentSettingsSectionId}/protection`, {
+    method: 'PUT', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ current_password: current, new_password: next.trim() })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    showToast(err.detail || 'Failed to change password');
+    return;
+  }
+  showToast('Password changed');
+  closeListSettings();
+}
+
+async function removeListPassword() {
+  const current = prompt('Enter the password to remove protection');
+  if (current === null) return;
+  const res = await apiFetch(`/api/sections/${currentSettingsSectionId}/protection`, {
+    method: 'PUT', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ current_password: current, new_password: null })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    showToast(err.detail || 'Wrong password');
+    return;
+  }
+  delete unlockedSections[currentSettingsSectionId];
+  showToast('Protection removed');
+  closeListSettings();
+  fetchState();
+}
+
+async function deleteSectionFromSettings() {
+  const s = state.sections.find(x => x.id === currentSettingsSectionId);
+  if (!s) return;
+  if (!confirm(`Remove "${s.name}" and everything on it?`)) return;
+  const token = unlockedSections[currentSettingsSectionId];
+  const qs = token ? `?unlock_token=${encodeURIComponent(token)}` : '';
+  await apiFetch(`/api/sections/${currentSettingsSectionId}${qs}`, { method: 'DELETE' });
+  closeListSettings();
+  fetchState();
+}
+
+async function unlockSectionPrompt(sectionId) {
+  const pw = prompt('Enter the password for this list');
+  if (!pw) return;
+  try {
+    const res = await apiFetch(`/api/sections/${sectionId}/unlock`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pw })
+    });
+    if (!res.ok) { showToast('Wrong password'); return; }
+    const data = await res.json();
+    unlockedSections[sectionId] = data.token;
+    lastStateJson = null; // force a real render now that this list should reveal its tasks
+    fetchState();
+  } catch (err) {
+    showToast('Failed to unlock — check your connection');
+  }
+}
+
+async function promptNewSection() {
+  const name = prompt('Name this list (e.g. "Camping trip")');
+  if (!name || !name.trim()) return;
+  await apiFetch('/api/sections', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name: name.trim() })
+  });
+  fetchState();
+}
+
+// ---- albums ----
+
+function startAlbumUpload(albumId) {
+  if (!myName) { ensureName(); return; }
+  pendingAlbumId = albumId;
+  document.getElementById('albumInput').click();
+}
+
+async function handleAlbumFilesSelected(e) {
+  const files = Array.from(e.target.files);
+  e.target.value = '';
+  if (!files.length) return;
+  const albumId = pendingAlbumId;
+  const sectionId = albumSectionById[albumId];
+  const token = unlockedSections[sectionId] || null;
+
+  const fd = new FormData();
+  files.forEach(f => fd.append('files', f));
+  fd.append('added_by', myName);
+  fd.append('album_id', albumId);
+  if (token) fd.append('unlock_token', token);
+
+  showToast(`Uploading ${files.length} photo${files.length !== 1 ? 's' : ''}…`);
+  try {
+    const res = await apiFetch('/api/photos/bulk', { method: 'POST', body: fd });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      showToast(err.detail || 'Upload failed');
+    }
+  } catch (err) {
+    showToast('Upload failed — check your connection');
+  }
+  fetchState();
+}
+
+async function createAlbumPrompt(sectionId) {
+  const name = prompt('Name this album (e.g. "BBQ", "Kids\' trip")');
+  if (!name || !name.trim()) return;
+  const token = unlockedSections[sectionId] || null;
+  await apiFetch('/api/albums', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ section_id: sectionId, name: name.trim(), unlock_token: token }),
+  });
+  fetchState();
+}
+
+function openAlbumView(albumId) {
+  const sectionId = albumSectionById[albumId];
+  const section = state.sections.find(s => s.id === sectionId);
+  const album = section && (section.albums || []).find(a => a.id === albumId);
+  if (!album) return;
+  currentAlbumViewId = albumId;
+  document.getElementById('albumViewTitle').innerText = album.name;
+  albumShareSelectMode = false;
+  albumShareSelectedIds = new Set();
+  renderAlbumViewActions();
+  renderAlbumViewGrid(albumId);
+  document.getElementById('albumViewModal').style.display = 'flex';
+}
+
+let dragReorderActive = false;
+let editingTaskId = null; // don't let a poll-driven re-render clobber an in-progress task text edit
+
+// ---- album sharing: pick which photos/videos to include ----
+// whole-album sharing used to grab everything automatically, but real devices
+// vary in what they'll accept as a batch share (confirmed: one album of 10
+// photos shares fine, a different album of 13 doesn't, on the same phone) —
+// rather than keep guessing at a universal size/count limit, let the person
+// sharing just pick what to include. Defaults to all photos checked so the
+// common case ("share the album") is still one extra tap, not a chore.
+let albumShareSelectMode = false;
+let albumShareSelectedIds = new Set();
+
+function renderAlbumViewActions() {
+  const el = document.getElementById('albumViewActions');
+  if (albumShareSelectMode) {
+    el.innerHTML = `
+      <button type="button" class="album-select-share-btn" onclick="shareSelectedAlbumPhotos()">Share (${albumShareSelectedIds.size})</button>
+      <button type="button" class="album-select-cancel-btn" onclick="cancelAlbumShareSelect()">Cancel</button>
+    `;
+  } else {
+    el.innerHTML = `
+      <button type="button" id="albumViewShareBtn" onclick="startAlbumShareSelect()" aria-label="Share album">${SHARE_ICON}</button>
+      <button type="button" id="albumViewGearBtn" onclick="openAlbumSettingsFromView()" aria-label="Album settings">${GEAR_ICON}</button>
+    `;
+  }
+}
+
+function startAlbumShareSelect() {
+  if (currentAlbumViewId == null) return;
+  const list = galleryContexts['album-' + currentAlbumViewId] || [];
+  const shareable = list.filter(p => p.filename);
+  if (!shareable.length) { showToast('Nothing to share yet'); return; }
+  if (!navigator.share) { showToast("Sharing isn't supported on this browser"); return; }
+  albumShareSelectMode = true;
+  // default to every photo checked (videos start unchecked — they're not
+  // auto-prefetched, so including one means an extra wait before it's ready)
+  albumShareSelectedIds = new Set(shareable.filter(p => p.media_type === 'photo').map(p => p.id));
+  renderAlbumViewActions();
+  renderAlbumViewGrid(currentAlbumViewId);
+}
+
+function cancelAlbumShareSelect() {
+  albumShareSelectMode = false;
+  albumShareSelectedIds = new Set();
+  renderAlbumViewActions();
+  renderAlbumViewGrid(currentAlbumViewId);
+}
+
+function toggleAlbumShareSelected(photoId) {
+  if (albumShareSelectedIds.has(photoId)) albumShareSelectedIds.delete(photoId);
+  else albumShareSelectedIds.add(photoId);
+  const tile = document.querySelector(`.album-view-grid [data-photo-id="${photoId}"]`);
+  const wrap = tile && tile.closest('.album-select-wrap');
+  if (wrap) {
+    const selected = albumShareSelectedIds.has(photoId);
+    wrap.classList.toggle('selected', selected);
+    const badge = wrap.querySelector('.select-check');
+    if (badge) badge.innerHTML = selected ? CHECK_ICON : '';
+  }
+  renderAlbumViewActions();
+}
+
+function shareSelectedAlbumPhotos() {
+  if (currentAlbumViewId == null) return;
+  if (!albumShareSelectedIds.size) { showToast('Select at least one to share'); return; }
+  if (!navigator.share) { showToast("Sharing isn't supported on this browser"); return; }
+  const list = galleryContexts['album-' + currentAlbumViewId] || [];
+  const selected = list.filter(p => albumShareSelectedIds.has(p.id));
+  const albumName = document.getElementById('albumViewTitle').innerText || 'Album';
+
+  // same rule as everywhere else sharing happens: navigator.share() must be
+  // called synchronously, with everything already in memory — never mid-fetch
+  const notReady = selected.filter(p => !shareBlobCache.has(p.id));
+  if (notReady.length) {
+    notReady.forEach(p => prefetchShareBlob(p, true)); // explicit pick — fetch even a video
+    showToast(`Still getting ${notReady.length} of those ready — try Share again in a few seconds`);
+    return;
+  }
+
+  const files = selected.map((p) => {
+    const blob = shareBlobCache.get(p.id);
+    const type = blob.type || guessMimeFromFilename(p.filename) || 'application/octet-stream';
+    return new File([blob], p.filename, { type });
+  });
+
+  if (navigator.canShare && !navigator.canShare({ files })) {
+    showToast(files.length > 1 ? "Those can't be shared together — try selecting fewer" : "That can't be shared this way");
+    return;
+  }
+
+  showToast('Preparing to share…');
+  navigator.share({ files, title: albumName }).then(() => {
+    cancelAlbumShareSelect();
+  }).catch((err) => {
+    if (err && err.name === 'AbortError') return; // user cancelled the share sheet — stay in select mode
+    if (err && err.name === 'NotAllowedError' && files.length > 1) {
+      // confirmed via real-device testing, not a guess: 13 photos together
+      // shares fine, either video alone shares fine, but 2 videos together
+      // fails — far fewer apps register to receive a *batch* of videos than
+      // a batch of photos (they're so much bigger), so there's often nothing
+      // on the phone for Android to hand multiple videos to at once
+      const videoCount = selected.filter(p => p.media_type === 'video').length;
+      showToast(
+        videoCount > 1
+          ? "This phone can't share multiple videos together — select just one video at a time"
+          : `Couldn't share ${files.length} at once on this phone — try selecting fewer`,
+        8000
+      );
+      return;
+    }
+    showToast(shareErrorToast(err, "Couldn't share those"), 8000);
+  });
+}
+
+function renderAlbumViewGrid(albumId) {
+  if (dragReorderActive) return; // don't clobber an in-progress drag reorder when a poll lands mid-gesture
+  const sectionId = albumSectionById[albumId];
+  const section = state.sections.find(s => s.id === sectionId);
+  const album = section && (section.albums || []).find(a => a.id === albumId);
+  if (album) document.getElementById('albumViewTitle').innerText = album.name;
+
+  const list = galleryContexts['album-' + albumId] || [];
+  const container = document.getElementById('albumViewGrid');
+  if (albumShareSelectMode) {
+    container.innerHTML = list.map(p => {
+      const selected = albumShareSelectedIds.has(p.id);
+      const thumb = mediaThumbHtml(p, 'album-view-thumb', `toggleAlbumShareSelected(${p.id})`, true);
+      return `<div class="album-select-wrap ${selected ? 'selected' : ''}">${thumb}<span class="select-check">${selected ? CHECK_ICON : ''}</span></div>`;
+    }).join('');
+  } else {
+    container.innerHTML =
+      list.map(p => mediaThumbHtml(p, 'album-view-thumb', `openGallery('album-${albumId}', ${p.id})`, true)).join('')
+      + `<button type="button" class="album-view-add" onclick="startAlbumUpload(${albumId})" aria-label="Add photos">+</button>`;
+    initSortable(container, '[data-photo-id]', (c) => saveAlbumOrder(albumId, c));
+  }
+  list.forEach(p => prefetchShareBlob(p));
+}
+
+// ---- drag-to-reorder (album photos + task lists), via SortableJS ----
+// a hand-rolled long-press+pointer-events version of this lived here before,
+// but real Android devices cancel the touch sequence (pointercancel) as a
+// side effect of the OS's own long-press gesture recognition, independent of
+// whether the resulting context menu is suppressed. That's a well-known hard
+// problem that SortableJS already handles correctly through years of
+// real-device testing, so we lean on it instead of re-solving it by hand.
+
+function initSortable(container, itemSelector, onDrop) {
+  if (container.sortableInstance) container.sortableInstance.destroy();
+  container.sortableInstance = new Sortable(container, {
+    draggable: itemSelector,
+    delay: 350,               // long-press before a touch drag starts
+    delayOnTouchOnly: true,   // mouse (laptop) drags immediately, no artificial delay
+    touchStartThreshold: 15,  // pixels of finger drift during the delay that still counts as "holding still"
+    animation: 150,
+    filter: '.check, .del-task, .photo-btn, .task-edit-input',
+    preventOnFilter: false,   // let taps on those buttons keep working normally
+    onStart: () => { dragReorderActive = true; },
+    onEnd: () => {
+      dragReorderActive = false;
+      onDrop(container);
+    },
+  });
+}
+
+async function saveAlbumOrder(albumId, container) {
+  const ids = Array.from(container.querySelectorAll('[data-photo-id]')).map(el => parseInt(el.dataset.photoId));
+  const sectionId = albumSectionById[albumId];
+  const token = unlockedSections[sectionId] || null;
+  await apiFetch(`/api/albums/${albumId}/reorder`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ photo_ids: ids, unlock_token: token }),
+  });
+  fetchState();
+}
+
+async function saveTaskOrder(sectionId, container) {
+  const ids = Array.from(container.querySelectorAll('[data-task-id]')).map(el => parseInt(el.dataset.taskId));
+  const token = unlockedSections[sectionId] || null;
+  await apiFetch(`/api/sections/${sectionId}/reorder-tasks`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ task_ids: ids, unlock_token: token }),
+  });
+  fetchState();
+}
+
+function closeAlbumView() {
+  document.getElementById('albumViewModal').style.display = 'none';
+  currentAlbumViewId = null;
+  dragReorderActive = false; // defensive — never leave a stuck drag-guard if the modal closes mid-gesture
+  albumShareSelectMode = false;
+  albumShareSelectedIds = new Set();
+}
+
+function closeAlbumViewIfBackdrop(e) {
+  if (e.target.id === 'albumViewModal') closeAlbumView();
+}
+
+function openAlbumSettingsFromView() {
+  if (currentAlbumViewId != null) openAlbumSettings(currentAlbumViewId);
+}
+
+function openAlbumSettings(albumId) {
+  const sectionId = albumSectionById[albumId];
+  const section = state.sections.find(s => s.id === sectionId);
+  const album = section && (section.albums || []).find(a => a.id === albumId);
+  if (!album) return;
+  currentSettingsAlbumId = albumId;
+  document.getElementById('asNameInput').value = album.name;
+  document.getElementById('albumSettingsModal').style.display = 'flex';
+}
+
+function closeAlbumSettings() {
+  document.getElementById('albumSettingsModal').style.display = 'none';
+  currentSettingsAlbumId = null;
+}
+
+function albumUnlockToken() {
+  const sectionId = albumSectionById[currentSettingsAlbumId];
+  return unlockedSections[sectionId] || null;
+}
+
+async function saveAlbumSettings() {
+  const name = document.getElementById('asNameInput').value.trim();
+  if (!name) { showToast('Give the album a name'); return; }
+  await apiFetch(`/api/albums/${currentSettingsAlbumId}`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name, unlock_token: albumUnlockToken() }),
+  });
+  closeAlbumSettings();
+  fetchState();
+}
+
+async function moveAlbum(direction) {
+  if (!currentSettingsAlbumId) return;
+  await apiFetch(`/api/albums/${currentSettingsAlbumId}/move`, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ direction, unlock_token: albumUnlockToken() }),
+  });
+  fetchState();
+}
+
+async function deleteAlbumFromSettings() {
+  if (!currentSettingsAlbumId) return;
+  if (!confirm('Delete this album and all its photos? This can\'t be undone.')) return;
+  const token = albumUnlockToken();
+  const qs = token ? `?unlock_token=${encodeURIComponent(token)}` : '';
+  await apiFetch(`/api/albums/${currentSettingsAlbumId}${qs}`, { method: 'DELETE' });
+  closeAlbumSettings();
+  closeAlbumView();
+  fetchState();
+}
+
+function guessMimeFromFilename(filename) {
+  const ext = (filename.split('.').pop() || '').toLowerCase();
+  const map = {
+    jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp',
+    mp4: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm', '3gp': 'video/3gpp', avi: 'video/x-msvideo',
+  };
+  return map[ext] || '';
+}
+
+async function fetchAsShareFile(p) {
+  // reuse an already-prefetched blob when we have one — navigator.share() has to
+  // fire shortly after the tap that triggered it, so skipping a redundant
+  // download here is what keeps that window from closing
+  let blob = shareBlobCache.get(p.id);
+  if (!blob) {
+    const res = await apiFetch(uploadUrl(p.filename));
+    if (!res.ok) throw new Error(`Couldn't download ${p.filename}`);
+    blob = await res.blob();
+  }
+  // p.filename already carries the correct extension (jpg/mp4/webm/etc.); if the
+  // server didn't report a usable type, infer one from that extension instead of
+  // falling back to a generic type that mobile share sheets tend to reject
+  const type = blob.type || guessMimeFromFilename(p.filename) || 'application/octet-stream';
+  return new File([blob], p.filename, { type });
+}
+
+function shareErrorToast(err, fallback) {
+  // temporary: include the browser's raw error name so this can be diagnosed
+  // from a phone with no console access — strip once the actual cause is confirmed
+  const name = err && err.name ? ` [${err.name}]` : '';
+  if (err && err.name === 'NotAllowedError') {
+    return `Sharing timed out getting ready — try tapping Share again${name}`;
+  }
+  return (err && err.message ? `Share failed: ${err.message}` : fallback) + name;
+}
+
+// ---- view switching ----
+
+function switchView(view) {
+  document.getElementById('listsView').style.display = view === 'lists' ? '' : 'none';
+  document.getElementById('calendarView').style.display = view === 'calendar' ? '' : 'none';
+  document.getElementById('mealPlannerView').style.display = view === 'mealPlanner' ? '' : 'none';
+  document.getElementById('appointmentsView').style.display = view === 'appointments' ? '' : 'none';
+  document.getElementById('tabLists').classList.toggle('active', view === 'lists');
+  document.getElementById('tabCalendar').classList.toggle('active', view === 'calendar');
+  document.getElementById('tabMealPlanner').classList.toggle('active', view === 'mealPlanner');
+  document.getElementById('tabAppointments').classList.toggle('active', view === 'appointments');
+  if (view === 'calendar') {
+    if (!calendarMonth) calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    renderCalendar();
+  }
+}
+
+// ---- meal planner ----
+
+// weekday values are just arbitrary DB keys (0=Mon..6=Sun) — display order is
+// independent, and this household plans meals starting from Saturday
+const MEAL_PLAN_DAYS = [
+  { weekday: 5, label: 'Sat' },
+  { weekday: 6, label: 'Sun' },
+  { weekday: 0, label: 'Mon' },
+  { weekday: 1, label: 'Tue' },
+  { weekday: 2, label: 'Wed' },
+  { weekday: 3, label: 'Thu' },
+  { weekday: 4, label: 'Fri' },
+];
+
+function renderMealPlan(data) {
+  const container = document.getElementById('mealPlanList');
+  if (!container) return;
+  const focused = document.activeElement;
+  if (focused && focused.classList && focused.classList.contains('meal-plan-input')) {
+    return; // don't clobber an in-progress edit when a poll lands mid-typing
+  }
+  const byWeekday = {};
+  (data.meal_plan || []).forEach(m => byWeekday[m.weekday] = m);
+  container.innerHTML = MEAL_PLAN_DAYS.map(({ weekday, label }) => {
+    const text = (byWeekday[weekday] && byWeekday[weekday].text) || '';
+    const valueSafe = escapeHtml(text).replace(/"/g, '&quot;');
+    return `
+      <div class="meal-plan-row">
+        <div class="meal-plan-day">${label}</div>
+        <input class="meal-plan-input" data-weekday="${weekday}" value="${valueSafe}" placeholder="What's for dinner?"
+               onblur="saveMealPlanEntry(this)" onkeydown="if(event.key==='Enter'){this.blur();}">
+        <button type="button" class="meal-plan-dice" onclick="surpriseMe(${weekday})" aria-label="Surprise me">${DICE_ICON}</button>
+      </div>
+    `;
+  }).join('');
+}
+
+async function surpriseMe(weekday) {
+  const input = document.querySelector(`.meal-plan-input[data-weekday="${weekday}"]`);
+  if (!input) return;
+  let pick = DINNER_SUGGESTIONS[Math.floor(Math.random() * DINNER_SUGGESTIONS.length)];
+  if (DINNER_SUGGESTIONS.length > 1) {
+    while (pick === input.value) {
+      pick = DINNER_SUGGESTIONS[Math.floor(Math.random() * DINNER_SUGGESTIONS.length)];
+    }
+  }
+  input.value = pick;
+  await saveMealPlanEntry(input);
+}
+
+async function saveMealPlanEntry(inputEl) {
+  if (!myName) { ensureName(); return; }
+  const weekday = parseInt(inputEl.dataset.weekday);
+  await apiFetch(`/api/meal-plan/${weekday}`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ text: inputEl.value, updated_by: myName }),
+  });
+  fetchState();
+}
+
+// ---- appointments ----
+
+const LEAD_LABELS = { 15: '15 min', 30: '30 min', 60: '1 hour', 120: '2 hours', 1440: '1 day', 2880: '2 days' };
+
+function renderAppointments(data) {
+  const list = document.getElementById('appointmentsList');
+  if (!list) return;
+  const appointments = data.appointments || [];
+  if (!appointments.length) {
+    list.innerHTML = '<li class="empty" style="border:none;">No appointments yet</li>';
+    return;
+  }
+  list.innerHTML = appointments.map(a => {
+    const d = new Date(a.date + 'T00:00:00');
+    const dateLabel = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    const leadLabel = LEAD_LABELS[a.lead_minutes] || `${a.lead_minutes} min`;
+    return `
+      <li>
+        <div class="task-body">
+          <div class="task-text">${escapeHtml(a.name)}</div>
+          <div class="task-meta">${dateLabel} at ${escapeHtml(a.time)} · reminds ${leadLabel} before</div>
+        </div>
+        <button class="photo-btn" title="Edit" onclick="openEditAppointmentModal(${a.id})">${EDIT_ICON}</button>
+        <button class="del-task" onclick="deleteAppointment(${a.id})">&times;</button>
+      </li>
+    `;
+  }).join('');
+}
+
+let editingAppointmentId = null;
+
+function openAddAppointmentModal() {
+  if (!myName) { ensureName(); return; }
+  editingAppointmentId = null;
+  document.getElementById('appointmentModalTitle').innerText = 'New appointment';
+  document.getElementById('appointmentSubmitBtn').innerText = 'Add';
+  document.getElementById('apName').value = '';
+  document.getElementById('apDate').value = '';
+  document.getElementById('apTime').value = '';
+  document.getElementById('apLead').value = '60';
+  document.getElementById('addAppointmentModal').style.display = 'flex';
+}
+
+function openEditAppointmentModal(id) {
+  if (!myName) { ensureName(); return; }
+  const appt = (state.appointments || []).find(a => a.id === id);
+  if (!appt) return;
+  editingAppointmentId = id;
+  document.getElementById('appointmentModalTitle').innerText = 'Edit appointment';
+  document.getElementById('appointmentSubmitBtn').innerText = 'Save';
+  document.getElementById('apName').value = appt.name;
+  document.getElementById('apDate').value = appt.date;
+  document.getElementById('apTime').value = appt.time;
+  document.getElementById('apLead').value = String(appt.lead_minutes);
+  document.getElementById('addAppointmentModal').style.display = 'flex';
+}
+
+function closeAddAppointmentModal() {
+  document.getElementById('addAppointmentModal').style.display = 'none';
+  editingAppointmentId = null;
+}
+
+async function submitAppointment() {
+  const name = document.getElementById('apName').value.trim();
+  const date = document.getElementById('apDate').value;
+  const time = document.getElementById('apTime').value;
+  const leadMinutes = parseInt(document.getElementById('apLead').value);
+  if (!name) { showToast('Give the appointment a name'); return; }
+  if (!date || !time) { showToast('Pick a date and time'); return; }
+  if (editingAppointmentId) {
+    await apiFetch(`/api/appointments/${editingAppointmentId}`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name, date, time, lead_minutes: leadMinutes }),
+    });
+  } else {
+    await apiFetch('/api/appointments', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name, date, time, lead_minutes: leadMinutes, added_by: myName }),
+    });
+  }
+  closeAddAppointmentModal();
+  fetchState();
+}
+
+async function deleteAppointment(id) {
+  await apiFetch(`/api/appointments/${id}`, { method: 'DELETE' });
+  fetchState();
+}
+
+// ---- calendar ----
+
+function formatDateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function changeMonth(delta) {
+  calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + delta, 1);
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const label = document.getElementById('calendarMonthLabel');
+  const year = calendarMonth.getFullYear();
+  const month = calendarMonth.getMonth();
+  label.innerText = calendarMonth.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+  const firstDay = new Date(year, month, 1);
+  const startOffset = (firstDay.getDay() + 6) % 7; // Monday-first week
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const eventsByDate = {};
+  (state.events || []).forEach(ev => {
+    if (!eventsByDate[ev.date]) eventsByDate[ev.date] = { day: false, evening: false };
+    eventsByDate[ev.date][ev.slot] = true;
+  });
+
+  const todayStr = formatDateStr(new Date());
+  let html = '';
+  for (let i = 0; i < startOffset; i++) html += '<div class="cal-cell empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const ev = eventsByDate[dateStr] || {};
+    const hasEvent = ev.day || ev.evening;
+    html += `
+      <div class="cal-cell ${dateStr === todayStr ? 'today' : ''} ${hasEvent ? 'has-event' : ''}" onclick="openDayModal('${dateStr}')">
+        <div class="cal-date">${d}</div>
+        <div class="cal-dots">
+          ${ev.day ? `<span class="icon sun">${SUN_ICON}</span>` : ''}
+          ${ev.evening ? `<span class="icon moon">${MOON_ICON}</span>` : ''}
+        </div>
+      </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function openDayModal(dateStr) {
+  selectedDate = dateStr;
+  const d = new Date(dateStr + 'T00:00:00');
+  document.getElementById('dayModalTitle').innerText = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  renderDaySlots();
+  document.getElementById('dayModal').style.display = 'flex';
+}
+
+function closeDayModal() {
+  document.getElementById('dayModal').style.display = 'none';
+  selectedDate = null;
+}
+
+function renderDaySlots() {
+  const events = (state.events || []).filter(e => e.date === selectedDate);
+  renderSlotList('daySlotEvents', events.filter(e => e.slot === 'day'));
+  renderSlotList('eveningSlotEvents', events.filter(e => e.slot === 'evening'));
+}
+
+function renderSlotList(elId, events) {
+  const el = document.getElementById(elId);
+  el.innerHTML = events.length === 0
+    ? '<li class="empty-event">Nothing yet</li>'
+    : events.map(e => `<li>${escapeHtml(e.title)} <button onclick="deleteEvent(${e.id})">&times;</button></li>`).join('');
+}
+
+async function addEvent(slot) {
+  if (!myName) { ensureName(); return; }
+  const title = prompt(`Add ${slot} event`);
+  if (!title || !title.trim()) return;
+  await apiFetch('/api/events', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ date: selectedDate, slot, title: title.trim(), added_by: myName })
+  });
+  fetchState();
+}
+
+async function deleteEvent(id) {
+  if (!confirm('Delete this event?')) return;
+  await apiFetch(`/api/events/${id}`, { method: 'DELETE' });
+  fetchState();
+}
+
+// ---- pinch-to-zoom on the lightbox photo, via Panzoom ----
+// hand-rolled touch-gesture math has bitten this app before (see the
+// drag-reorder saga earlier — real devices have edge cases a well-tested
+// library already handles), so Panzoom owns the actual pinch/pan mechanics.
+// It's told not to pan on a single-finger drag by default so that gesture
+// stays free for our own swipe-between-photos handling below; once the photo
+// is actually zoomed in, panning is switched back on so a one-finger drag
+// moves around the zoomed image instead of changing photos.
+let lightboxPanzoom = null;
+
+function initLightboxPanzoom() {
+  const img = document.getElementById('lightboxImg');
+  lightboxPanzoom = Panzoom(img, {
+    maxScale: 4,
+    minScale: 1,
+    // 'outside' forces the image to always fully cover its box, which
+    // silently crops any photo whose aspect ratio doesn't match — verified
+    // this ends every photo resting at ~1.3x zoom instead of showing the
+    // whole thing. contain:false leaves the resting state exactly as it was
+    // before Panzoom existed (whole photo visible, scale 1); the tradeoff is
+    // no hard clamp on how far you can pan while zoomed in, which in
+    // practice just means double-tap or switching photos snaps it back.
+    contain: false,
+    disablePan: true,
+    animate: true,
+  });
+  img.addEventListener('panzoomzoom', (e) => {
+    lightboxPanzoom.setOptions({ disablePan: e.detail.scale <= 1.01 });
+  });
+}
+
+function resetLightboxZoom() {
+  if (!lightboxPanzoom) return;
+  lightboxPanzoom.reset({ animate: false });
+  lightboxPanzoom.setOptions({ disablePan: true }); // reset() only touches scale/pan — without this, a photo you zoomed and then navigated away from would leave panning stuck "on" for the next photo, silently breaking its swipe-to-change-photo gesture
+}
+
+(function setupGalleryTouchGestures() {
+  const img = document.getElementById('lightboxImg');
+  let startX = null;
+  let lastTapTime = 0;
+
+  img.addEventListener('touchstart', (e) => {
+    // only track for a swipe when it's a single finger and we're not zoomed
+    // in — a pinch (2 touches) or a pan-while-zoomed shouldn't also count as
+    // a swipe attempt
+    if (e.touches.length !== 1 || (lightboxPanzoom && lightboxPanzoom.getScale() > 1.01)) { startX = null; return; }
+    startX = e.touches[0].clientX;
+  });
+
+  img.addEventListener('touchend', (e) => {
+    if (startX !== null) {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) { dx > 0 ? galleryPrev() : galleryNext(); }
+      startX = null;
+    }
+
+    // double-tap to toggle zoom, same as most phone photo viewers
+    if (e.changedTouches.length === 1 && lightboxPanzoom) {
+      const now = Date.now();
+      if (now - lastTapTime < 300) {
+        const touch = e.changedTouches[0];
+        if (lightboxPanzoom.getScale() > 1.01) {
+          lightboxPanzoom.reset();
+        } else {
+          lightboxPanzoom.zoomToPoint(2.5, { clientX: touch.clientX, clientY: touch.clientY });
+        }
+        lastTapTime = 0;
+      } else {
+        lastTapTime = now;
+      }
+    }
+  });
+})();
+
+initLightboxPanzoom();
+
+document.getElementById('buildFooter').innerText = `build ${APP_BUILD}`;
+
+initAuth();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // updateViaCache: 'none' — never trust an HTTP-cached copy of sw.js itself
+    // when checking for updates; without this, an update we just shipped can
+    // sit unnoticed for a while even after the user reopens the app
+    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(err => console.error('SW failed', err));
+  });
+}
+</script>
+</body>
+</html>

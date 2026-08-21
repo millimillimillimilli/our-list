@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: our-list
+    runtime: docker
+    plan: starter # persistent disks require a paid plan — data won't survive restarts on the free tier
+    healthCheckPath: /
+    disk:
+      name: our-list-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /data/tasks.db
+      - key: PHOTOS_DIR
+        value: /data/photos
+      - key: APP_PASSWORD
+        sync: false # prompted at deploy time, never stored in this file
+      - key: NTFY_TOPIC
+        value: ""
+      - key: NTFY_SERVER
+        value: https://ntfy.sh
