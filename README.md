@@ -12,16 +12,24 @@ phones home.
 
 ## Deploy your own copy
 
-The easiest way to try it without touching a terminal:
+**Free, no card ever charged:** [Oracle Cloud's Always Free tier](ORACLE_DEPLOY.md)
+gives you a real always-on server with persistent storage at zero ongoing
+cost — it's more setup than a one-click button (15-20 minutes, once), but
+nobody pays anything, ever. See [ORACLE_DEPLOY.md](ORACLE_DEPLOY.md) for the
+full walkthrough.
+
+**Paid, but one click:** if you'd rather not touch a terminal at all and
+don't mind paying for the hosting yourself —
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/millimillimillimilli/our-list)
 
 Click it, connect your GitHub account, and Render reads `render.yaml` in this
 repo to set everything up — a persistent disk for your data, and it'll ask
 you to set one thing: `APP_PASSWORD` (the password everyone in your household
-will use to open the app — pick something you can share with them). Render's
-free tier doesn't include persistent storage, so this needs at least their
-Starter plan (a few dollars a month) for your data to survive restarts.
+will use to open the app — pick something you can share with them). This
+costs about **$7.25/month** (Render's Starter plan plus the disk) billed to
+*your own* Render account — it's never billed to whoever built this app,
+each person who deploys pays for their own copy.
 
 **Railway** works too, just without a single-click button yet: go to
 [railway.app](https://railway.app) → New Project → Deploy from GitHub repo →
@@ -30,8 +38,8 @@ go to the service's Variables tab and add `APP_PASSWORD`, then add a Volume
 (Settings → Volumes) mounted at `/data` — without that step your data won't
 survive a redeploy.
 
-Either way, once it's deployed you'll get a URL — open that on your phone
-the same way described below ("Installing it as an app on your phone").
+Whichever route, once it's deployed you'll get a URL — open that on your
+phone the same way described below ("Installing it as an app on your phone").
 
 ## Run it yourself (needs Docker + Docker Compose)
 
