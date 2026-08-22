@@ -357,6 +357,15 @@
     color: var(--brand-deep); font-weight: 700; font-size: 0.85rem; margin: -6px 0 14px;
     min-height: 1.1em;
   }
+  .app-gate-signup-link { text-align: center; margin-top: 14px; font-size: 0.85rem; }
+  .app-gate-signup-link a { color: var(--brand-deep); font-weight: 700; text-decoration: underline; cursor: pointer; }
+  .app-gate-create-intro { font-size: 0.88rem; color: var(--ink-soft); text-align: center; margin: 0 0 16px; }
+  .app-gate-code-box {
+    font-family: var(--body-font); font-weight: 800; font-size: 1.15rem; text-align: center;
+    background: var(--bg); border: 2px dashed var(--brand-deep); border-radius: 12px;
+    padding: 14px; margin-bottom: 14px; color: var(--brand-deep); word-break: break-word;
+  }
+  .app-gate-code-warning { font-size: 0.82rem; color: var(--ink-soft); text-align: center; margin: 10px 0 16px; }
 
   .add-items-modal { text-align: left; max-width: 360px; }
   .add-items-modal h3 { text-align: center; }
@@ -652,9 +661,25 @@
 <div id="appGate" class="app-gate-backdrop" style="display:none;">
   <div class="modal">
     <h3>Our List</h3>
-    <input id="appGateInput" type="password" placeholder="Household password" autocomplete="current-password">
-    <div class="app-gate-error" id="appGateError"></div>
-    <div><button onclick="submitAppPassword()">Unlock</button></div>
+    <div id="appGateLoginView">
+      <input id="appGateInput" type="password" placeholder="Household code" autocomplete="current-password">
+      <div class="app-gate-error" id="appGateError"></div>
+      <div><button onclick="submitAppPassword()">Unlock</button></div>
+      <div class="app-gate-signup-link"><a onclick="showCreateHouseholdView()">New here? Create a household</a></div>
+    </div>
+    <div id="appGateCreateView" style="display:none;">
+      <p class="app-gate-create-intro">This makes a brand new, empty household — your own private lists, completely separate from anyone else's.</p>
+      <div><button onclick="createHousehold()">Create my household</button></div>
+      <div class="app-gate-error" id="appGateCreateError"></div>
+      <div class="app-gate-signup-link"><a onclick="showLoginView()">Already have a code? Log in instead</a></div>
+    </div>
+    <div id="appGateCodeView" style="display:none;">
+      <p class="app-gate-create-intro">Your household's code:</p>
+      <div class="app-gate-code-box" id="appGateCodeBox"></div>
+      <p class="app-gate-code-warning">Save this now — it's the only way back in. There's no email or account recovery.</p>
+      <div><button class="neutral" onclick="copyHouseholdCode()">Copy code</button></div>
+      <div><button onclick="continueAfterCreate()">I've saved it — continue</button></div>
+    </div>
   </div>
 </div>
 
@@ -902,7 +927,7 @@
 <script src="/js/panzoom.min.js"></script>
 <script>
 const API = '';
-const APP_BUILD = 'v52'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
+const APP_BUILD = 'v53'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
 let appToken = localStorage.getItem('sharedtasks_app_token') || null;
 let appStarted = false; // guards against double-starting ensureName/fetchState/polling
 
@@ -924,7 +949,7 @@ function uploadUrl(filename) {
 
 function showAppGate() {
   document.getElementById('appGate').style.display = 'flex';
-  document.getElementById('appGateError').innerText = '';
+  showLoginView();
   const input = document.getElementById('appGateInput');
   input.value = '';
   setTimeout(() => input.focus(), 50);
@@ -934,17 +959,31 @@ function hideAppGate() {
   document.getElementById('appGate').style.display = 'none';
 }
 
+function showLoginView() {
+  document.getElementById('appGateLoginView').style.display = '';
+  document.getElementById('appGateCreateView').style.display = 'none';
+  document.getElementById('appGateCodeView').style.display = 'none';
+  document.getElementById('appGateError').innerText = '';
+}
+
+function showCreateHouseholdView() {
+  document.getElementById('appGateLoginView').style.display = 'none';
+  document.getElementById('appGateCreateView').style.display = '';
+  document.getElementById('appGateCodeView').style.display = 'none';
+  document.getElementById('appGateCreateError').innerText = '';
+}
+
 async function submitAppPassword() {
-  const password = document.getElementById('appGateInput').value;
-  if (!password) return;
+  const code = document.getElementById('appGateInput').value.trim();
+  if (!code) return;
   try {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ code }),
     });
     if (!res.ok) {
-      document.getElementById('appGateError').innerText = 'Wrong password, try again.';
+      document.getElementById('appGateError').innerText = "That code wasn't found, try again.";
       return;
     }
     const data = await res.json();
@@ -955,6 +994,48 @@ async function submitAppPassword() {
   } catch (e) {
     document.getElementById('appGateError').innerText = 'Something went wrong, try again.';
   }
+}
+
+// signup — held in memory only until the person confirms they've saved it,
+// never written to localStorage until continueAfterCreate() below, so a
+// half-finished signup (e.g. they close the tab on the code screen) doesn't
+// silently log them into a household whose code they never actually saved
+let pendingHouseholdCode = null;
+let pendingHouseholdToken = null;
+
+async function createHousehold() {
+  try {
+    const res = await fetch('/api/households', { method: 'POST' });
+    if (!res.ok) {
+      document.getElementById('appGateCreateError').innerText = 'Something went wrong, try again.';
+      return;
+    }
+    const data = await res.json();
+    pendingHouseholdCode = data.code;
+    pendingHouseholdToken = data.token;
+    document.getElementById('appGateCodeBox').innerText = data.code;
+    document.getElementById('appGateCreateView').style.display = 'none';
+    document.getElementById('appGateCodeView').style.display = '';
+  } catch (e) {
+    document.getElementById('appGateCreateError').innerText = 'Something went wrong, try again.';
+  }
+}
+
+function copyHouseholdCode() {
+  if (!pendingHouseholdCode) return;
+  navigator.clipboard.writeText(pendingHouseholdCode)
+    .then(() => showToast('Code copied'))
+    .catch(() => {});
+}
+
+function continueAfterCreate() {
+  if (!pendingHouseholdToken) return;
+  appToken = pendingHouseholdToken;
+  localStorage.setItem('sharedtasks_app_token', appToken);
+  pendingHouseholdCode = null;
+  pendingHouseholdToken = null;
+  hideAppGate();
+  startApp();
 }
 
 function startApp() {

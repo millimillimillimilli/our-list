@@ -8,14 +8,6 @@ services:
       name: our-list-data
       mountPath: /data
       sizeGB: 1
-    envVars:
-      - key: DB_PATH
-        value: /data/tasks.db
-      - key: PHOTOS_DIR
-        value: /data/photos
-      - key: APP_PASSWORD
-        sync: false # prompted at deploy time, never stored in this file
-      - key: NTFY_TOPIC
-        value: ""
-      - key: NTFY_SERVER
-        value: https://ntfy.sh
+    # No environment variables needed — DATA_ROOT defaults to /data, matching
+    # the disk above. Households sign up inside the app itself (no deploy-time
+    # password to configure); each gets its own private login code.

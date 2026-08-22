@@ -76,16 +76,17 @@ sudo usermod -aG docker $USER
 newgrp docker
 ```
 
-## 5. Get the app and configure it
+## 5. Get the app
 
 ```bash
 git clone https://github.com/millimillimillimilli/our-list.git
 cd our-list
-echo "APP_PASSWORD=choose-a-real-password-here" > .env
 ```
 
-Pick a real password for `APP_PASSWORD` — anyone with your server's address
-can otherwise open the app.
+No `.env` or password to set up here — the app is multi-tenant, so each
+household signs up for its own private space from inside the app itself
+(Step 7 below) and gets its own login code. Nothing to configure at deploy
+time.
 
 ## 6. Add HTTPS (recommended, not optional)
 

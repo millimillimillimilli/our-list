@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   sharedtasks:
     build: .
@@ -9,18 +7,10 @@ services:
       - "8123:8000"
     volumes:
       - sharedtasks-data:/data
-    environment:
-      # Optional: set a private ntfy.sh topic name to get real phone
-      # notifications ("Caroline added a task") even when the app is closed.
-      # Pick something unguessable, e.g. "our-house-tasks-x7q2".
-      # Install the ntfy app (Android/iOS) and subscribe to the same topic.
-      # Leave blank to disable notifications entirely.
-      - NTFY_TOPIC=${NTFY_TOPIC:-}
-      - NTFY_SERVER=${NTFY_SERVER:-https://ntfy.sh}
-      # Optional: set a shared household password to require login before the
-      # app can be used at all (recommended, since anyone with the URL can
-      # otherwise reach it). Leave blank to keep the app open with no login.
-      - APP_PASSWORD=${APP_PASSWORD:-}
+    # No environment variables needed — this is multi-tenant now. Each
+    # household signs up in the app itself and gets its own private login
+    # code; there's no shared app-wide password to configure. DATA_ROOT
+    # defaults to /data, matching the volume above.
 
 volumes:
   sharedtasks-data:
