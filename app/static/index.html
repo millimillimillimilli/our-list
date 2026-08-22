@@ -123,10 +123,7 @@
     margin-bottom: 16px;
     position: relative;
     box-shadow: 0 10px 24px -14px var(--shadow-tint);
-    transform: rotate(var(--tilt, 0deg));
   }
-  .card:nth-of-type(odd) { --tilt: -0.6deg; }
-  .card:nth-of-type(even) { --tilt: 0.5deg; }
 
   .pin { display: none; }
 
@@ -932,7 +929,7 @@
 <script src="/js/panzoom.min.js"></script>
 <script>
 const API = '';
-const APP_BUILD = 'v54'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
+const APP_BUILD = 'v55'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
 let appToken = localStorage.getItem('sharedtasks_app_token') || null;
 let appStarted = false; // guards against double-starting ensureName/fetchState/polling
 
