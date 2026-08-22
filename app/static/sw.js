@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'ourlist-v55';
+const CACHE_VERSION = 'ourlist-v56';
 const SHELL_FILES = [
   '/',
   '/manifest.json',
@@ -6,6 +6,8 @@ const SHELL_FILES = [
   '/icons/icon-512-v2.png',
   '/fonts/fredoka.woff2',
   '/fonts/nunito.woff2',
+  '/fonts/caveat-500.woff2',
+  '/fonts/caveat-700.woff2',
   '/js/jsQR.js',
   '/js/Sortable.min.js',
   '/js/panzoom.min.js',

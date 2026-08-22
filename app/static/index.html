@@ -27,6 +27,20 @@
     font-display: swap;
     src: url('/fonts/nunito.woff2') format('woff2');
   }
+  @font-face {
+    font-family: 'Caveat';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/caveat-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Caveat';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/caveat-700.woff2') format('woff2');
+  }
 
   :root {
     --bg: #FFF6F2;
@@ -48,6 +62,7 @@
     --shadow-tint: rgba(225,76,130,0.16);
     --display: 'Fredoka', ui-rounded, -apple-system, sans-serif;
     --body-font: 'Nunito', -apple-system, sans-serif;
+    --handwriting: 'Caveat', cursive;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -611,10 +626,23 @@
   .lightbox audio {
     width: 100%; border-radius: 40px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
   }
+  /* lined notepad paper — used for the note-writing modal and for reading
+     back/editing a text-only note, so it looks the same all the way through:
+     write it on paper, see it on paper. Left unapplied to photo captions,
+     which stay in the plain body font. */
+  .ruled-paper {
+    font-family: var(--handwriting); font-weight: 500; font-size: 1.5rem; line-height: 2rem;
+    color: var(--ink);
+    background-color: var(--surface);
+    background-image:
+      linear-gradient(to right, transparent 33px, var(--brand) 33px, var(--brand) 34px, transparent 34px),
+      repeating-linear-gradient(to bottom, transparent 0, transparent calc(2rem - 1px), var(--line) calc(2rem - 1px), var(--line) 2rem);
+    background-attachment: local; /* the ruling scrolls with the text, not the box */
+    padding: 24px 20px 24px 46px;
+  }
+
   .lightbox-text-note {
-    background: var(--surface); color: var(--ink); border-radius: 18px; padding: 28px 22px;
-    font-family: var(--display); font-weight: 600; font-size: 1.3rem; line-height: 1.35;
-    text-wrap: balance; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    border-radius: 18px; text-wrap: balance; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     max-height: 55vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box;
   }
   .lightbox-edit-area {
@@ -624,7 +652,16 @@
     background: var(--surface); color: var(--ink); margin-bottom: 14px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
   }
+  .lightbox-edit-area.ruled-paper { min-height: 160px; padding: 24px 20px 24px 46px; }
   .lightbox-edit-area:focus { outline: 2px solid var(--brand); }
+
+  .notepad-modal { max-width: 420px; }
+  .notepad-textarea {
+    width: 100%; box-sizing: border-box; min-height: 40vh; max-height: 55vh;
+    border-radius: 14px; border: none; resize: vertical; margin-bottom: 14px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .notepad-textarea:focus { outline: 2px solid var(--brand); }
   .gallery-nav {
     position: absolute; top: 50%; transform: translateY(-50%);
     background: rgba(0,0,0,0.45); color: white; border: none; border-radius: 50%;
@@ -792,6 +829,17 @@
   </div>
 </div>
 
+<div id="noteModal" class="modal-backdrop" style="display:none;" onclick="closeNoteModalIfBackdrop(event)">
+  <div class="modal notepad-modal">
+    <h3>Jot something down</h3>
+    <textarea id="noteTextarea" class="notepad-textarea ruled-paper" placeholder="Write here…" maxlength="4000"></textarea>
+    <div class="ls-main-actions">
+      <button type="button" onclick="submitTextNote()">Pin it</button>
+      <button type="button" class="neutral" onclick="closeNoteModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div id="movePhotoModal" class="modal-backdrop" style="display:none;" onclick="closeMovePhotoModalIfBackdrop(event)">
   <div class="modal move-photo-modal">
     <h3 id="movePhotoModalTitle">Move to album</h3>
@@ -929,7 +977,7 @@
 <script src="/js/panzoom.min.js"></script>
 <script>
 const API = '';
-const APP_BUILD = 'v55'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
+const APP_BUILD = 'v56'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
 let appToken = localStorage.getItem('sharedtasks_app_token') || null;
 let appStarted = false; // guards against double-starting ensureName/fetchState/polling
 
@@ -1511,10 +1559,26 @@ async function postTextNote(text) {
   fetchState();
 }
 
-async function addTextOnlyNote() {
+function addTextOnlyNote() {
   if (!myName) { ensureName(); return; }
-  const text = prompt('Write your note');
-  if (!text || !text.trim()) return;
+  const area = document.getElementById('noteTextarea');
+  area.value = '';
+  document.getElementById('noteModal').style.display = 'flex';
+  setTimeout(() => area.focus(), 50);
+}
+
+function closeNoteModal() {
+  document.getElementById('noteModal').style.display = 'none';
+}
+
+function closeNoteModalIfBackdrop(e) {
+  if (e.target.id === 'noteModal') closeNoteModal();
+}
+
+function submitTextNote() {
+  const text = document.getElementById('noteTextarea').value;
+  if (!text || !text.trim()) { showToast('Write something first'); return; }
+  closeNoteModal();
   postTextNote(text);
 }
 
@@ -1749,7 +1813,7 @@ function showGalleryPhoto() {
       ? `${escapeAndLinkify(p.caption)} — ${escapeHtml(p.added_by)}`
       : `Added by ${escapeHtml(p.added_by)}`;
   } else {
-    caption.className = 'lightbox-text-note';
+    caption.className = 'lightbox-text-note ruled-paper';
     caption.innerHTML = `${escapeAndLinkify(p.caption || '')}<div style="font-family:var(--body-font); font-weight:700; font-size:0.72rem; margin-top:14px; opacity:0.6;">— ${escapeHtml(p.added_by)}</div>`;
   }
 
@@ -1884,6 +1948,7 @@ function startEditCaption() {
   document.getElementById('lightboxCaption').style.display = 'none';
   const area = document.getElementById('lightboxEditArea');
   area.value = currentLightboxPhoto.caption || '';
+  area.classList.toggle('ruled-paper', !currentLightboxPhoto.filename); // notepad look only for text-only notes, not photo captions
   area.style.display = 'block';
   area.focus();
   document.getElementById('lightboxActions').innerHTML = `
