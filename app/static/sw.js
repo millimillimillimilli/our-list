@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'ourlist-v56';
+const CACHE_VERSION = 'ourlist-v57';
 const SHELL_FILES = [
   '/',
   '/manifest.json',

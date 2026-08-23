@@ -674,6 +674,10 @@ class EventCreate(BaseModel):
     added_by: str
 
 
+class EventUpdate(BaseModel):
+    title: str
+
+
 class LoginRequest(BaseModel):
     code: str
 
@@ -1373,6 +1377,19 @@ def create_event(payload: EventCreate, household_id: int = Depends(get_household
             f"{payload.added_by} added “{title}” to the calendar ({payload.date}, {payload.slot})",
         )
         return {"id": cur.lastrowid}
+
+
+@protected.patch("/api/events/{event_id}")
+def update_event(event_id: int, payload: EventUpdate, household_id: int = Depends(get_household_id)):
+    title = payload.title.strip()
+    if not title:
+        raise HTTPException(400, "Event title can't be empty")
+    with db(household_id) as conn:
+        row = conn.execute("SELECT id FROM events WHERE id = ?", (event_id,)).fetchone()
+        if not row:
+            raise HTTPException(404, "Event not found")
+        conn.execute("UPDATE events SET title = ? WHERE id = ?", (title, event_id))
+    return {"ok": True}
 
 
 @protected.delete("/api/events/{event_id}")

@@ -290,6 +290,12 @@
     color: var(--ink-faint); font-style: italic; font-size: 0.8rem; font-weight: 600;
     background: none; padding: 4px 10px;
   }
+  .event-edit-input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 0.85rem; font-weight: 700;
+    padding: 3px 6px; border-radius: 6px; border: 1.5px solid var(--brand-deep);
+    background: var(--surface); color: var(--ink);
+  }
+  .event-edit-input:focus { outline: 2px solid var(--brand-deep); outline-offset: 1px; }
   .day-slot-add {
     width: 100%; background: none; border: 2px dashed var(--line); border-radius: 10px;
     padding: 8px; font-size: 0.78rem; font-weight: 800; color: var(--ink-soft); cursor: pointer;
@@ -977,7 +983,7 @@
 <script src="/js/panzoom.min.js"></script>
 <script>
 const API = '';
-const APP_BUILD = 'v56'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
+const APP_BUILD = 'v57'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
 let appToken = localStorage.getItem('sharedtasks_app_token') || null;
 let appStarted = false; // guards against double-starting ensureName/fetchState/polling
 
@@ -2765,18 +2771,23 @@ function renderCalendar() {
 
 function openDayModal(dateStr) {
   selectedDate = dateStr;
+  editingEventId = null; // never carry an in-progress edit over from a previous day
   const d = new Date(dateStr + 'T00:00:00');
   document.getElementById('dayModalTitle').innerText = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-  renderDaySlots();
+  renderDaySlots(true);
   document.getElementById('dayModal').style.display = 'flex';
 }
 
 function closeDayModal() {
   document.getElementById('dayModal').style.display = 'none';
   selectedDate = null;
+  editingEventId = null;
 }
 
-function renderDaySlots() {
+let editingEventId = null;
+
+function renderDaySlots(force) {
+  if (!force && editingEventId != null) return; // don't clobber an in-progress edit when a poll lands mid-typing
   const events = (state.events || []).filter(e => e.date === selectedDate);
   renderSlotList('daySlotEvents', events.filter(e => e.slot === 'day'));
   renderSlotList('eveningSlotEvents', events.filter(e => e.slot === 'evening'));
@@ -2786,7 +2797,49 @@ function renderSlotList(elId, events) {
   const el = document.getElementById(elId);
   el.innerHTML = events.length === 0
     ? '<li class="empty-event">Nothing yet</li>'
-    : events.map(e => `<li>${escapeHtml(e.title)} <button onclick="deleteEvent(${e.id})">&times;</button></li>`).join('');
+    : events.map(e => e.id === editingEventId ? `
+        <li>
+          <input type="text" class="event-edit-input" id="eventEditInput" value="${escapeHtml(e.title)}" maxlength="200"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();saveEditEvent(${e.id});}else if(event.key==='Escape'){cancelEditEvent();}">
+          <button onclick="saveEditEvent(${e.id})" title="Save">${SAVE_ICON}</button>
+          <button onclick="cancelEditEvent()" title="Cancel">&times;</button>
+        </li>
+      ` : `
+        <li>
+          <span style="flex:1; min-width:0; overflow-wrap:break-word;">${escapeHtml(e.title)}</span>
+          <button onclick="startEditEvent(${e.id})" title="Edit">${EDIT_ICON}</button>
+          <button onclick="deleteEvent(${e.id})" title="Delete">&times;</button>
+        </li>
+      `).join('');
+}
+
+function startEditEvent(id) {
+  editingEventId = id;
+  renderDaySlots(true);
+  const input = document.getElementById('eventEditInput');
+  if (input) { input.focus(); input.select(); }
+}
+
+function cancelEditEvent() {
+  editingEventId = null;
+  renderDaySlots(true);
+}
+
+async function saveEditEvent(id) {
+  const input = document.getElementById('eventEditInput');
+  const title = input ? input.value.trim() : '';
+  if (!title) { showToast("Event can't be empty"); return; }
+  const res = await apiFetch(`/api/events/${id}`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ title }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    showToast(err.detail || "Couldn't save that edit");
+    return;
+  }
+  editingEventId = null;
+  fetchState();
 }
 
 async function addEvent(slot) {
