@@ -242,6 +242,52 @@
   .view-tab.active { background: var(--brand); border-color: var(--brand); color: white; }
   .view-tab:hover:not(.active) { border-color: var(--brand); }
 
+  /* label printer tab */
+  .lbl-section-label {
+    font-family: var(--body-font); font-weight: 800; font-size: 0.66rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--brand-deep); opacity: 0.7; margin: 14px 0 6px;
+  }
+  .lbl-field {
+    width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 1rem;
+    border: 2px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink);
+    font-family: var(--body-font); font-weight: 700;
+  }
+  .lbl-field:focus { outline: none; border-color: var(--brand); }
+  textarea.lbl-field { min-height: 90px; resize: vertical; }
+  .lbl-row { display: flex; gap: 10px; }
+  .lbl-row > div { flex: 1; min-width: 0; }
+  .lbl-row label, .lbl-adv label {
+    display: block; font-size: 0.72rem; font-weight: 800; color: var(--ink-soft); margin: 10px 0 4px;
+    font-family: var(--body-font);
+  }
+  .lbl-chk { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+  .lbl-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .lbl-chip {
+    background: none; border: 2px solid var(--brand); color: var(--brand-deep); border-radius: 999px;
+    padding: 6px 12px; font-family: var(--body-font); font-weight: 800; font-size: 0.78rem; cursor: pointer;
+  }
+  .lbl-chip:active { background: rgba(255,111,165,0.15); }
+  .lbl-btn {
+    width: 100%; border: none; border-radius: 12px; padding: 12px; margin-top: 12px; cursor: pointer;
+    background: var(--brand-deep); color: white; font-family: var(--body-font); font-weight: 800; font-size: 0.95rem;
+  }
+  .lbl-btn.sec { background: var(--bg); color: var(--ink); margin-top: 0; }
+  .lbl-btn:disabled { opacity: 0.4; cursor: default; }
+  .lbl-status { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); text-align: center; margin-top: 8px; min-height: 1.1em; }
+  .lbl-status.ok { color: #1F8C58; }
+  .lbl-status.bad { color: var(--brand-deep); }
+  .lbl-unsupported {
+    background: var(--bg); border-radius: 12px; padding: 10px 12px; margin-top: 10px;
+    font-size: 0.8rem; font-weight: 700; color: var(--ink-soft);
+  }
+  #lblPreview { background: #fff; display: block; margin: 0 auto; max-width: 100%; border-radius: 4px; border: 1px solid var(--line); image-rendering: pixelated; }
+  .lbl-adv { margin-top: 16px; }
+  .lbl-adv summary { cursor: pointer; font-weight: 800; font-size: 0.85rem; color: var(--ink-soft); font-family: var(--body-font); }
+  #lblLog {
+    background: #000; color: #9f9; font-size: 11px; padding: 8px; border-radius: 8px; max-height: 160px;
+    overflow: auto; white-space: pre-wrap; margin: 0;
+  }
+
   .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .calendar-header button {
     background: none; border: none; font-size: 1.5rem; color: var(--brand-deep); cursor: pointer;
@@ -897,6 +943,7 @@
     <button class="view-tab" id="tabCalendar" onclick="switchView('calendar')">Calendar</button>
     <button class="view-tab" id="tabMealPlanner" onclick="switchView('mealPlanner')">Meal Planner</button>
     <button class="view-tab" id="tabAppointments" onclick="switchView('appointments')">Appointments</button>
+    <button class="view-tab" id="tabLabels" onclick="switchView('labels')">Labels</button>
   </div>
 
   <div id="listsView">
@@ -952,6 +999,100 @@
     </div>
   </div>
 
+  <div id="labelsView" style="display:none;">
+    <div class="notes-card">
+      <h2 class="meal-plan-title">Labels</h2>
+      <div class="meal-plan-week-label">Print food labels on your Bluetooth label printer</div>
+
+      <button type="button" class="lbl-btn sec" id="lblConnect" onclick="labelConnect()">Connect printer</button>
+      <div class="lbl-status" id="lblStatus">Not connected</div>
+      <div class="lbl-unsupported" id="lblUnsupported" style="display:none;">
+        Printing needs Chrome on an Android phone — this browser can't connect to Bluetooth printers
+        (iPhones can't at all). You can still use this page to design a label.
+      </div>
+
+      <div class="lbl-section-label">Quick dates</div>
+      <div class="lbl-chips">
+        <button type="button" class="lbl-chip" onclick="labelPreset('made', 0)">Made today</button>
+        <button type="button" class="lbl-chip" onclick="labelPreset('use', 1)">Use by +1 day</button>
+        <button type="button" class="lbl-chip" onclick="labelPreset('use', 2)">+2 days</button>
+        <button type="button" class="lbl-chip" onclick="labelPreset('use', 3)">+3 days</button>
+        <button type="button" class="lbl-chip" onclick="labelPreset('use', 5)">+5 days</button>
+        <button type="button" class="lbl-chip" onclick="labelPreset('use', 7)">+7 days</button>
+        <button type="button" class="lbl-chip" onclick="labelPreset('use', 14)">+14 days</button>
+      </div>
+
+      <div class="lbl-section-label">Label text</div>
+      <textarea class="lbl-field" id="lblText" placeholder="Food name — then tap the dates above"></textarea>
+      <div class="lbl-row">
+        <div>
+          <label for="lblSize">Label size (mm)</label>
+          <select class="lbl-field" id="lblSize">
+            <option value="40x30" selected>40 × 30</option>
+            <option value="50x30">50 × 30</option>
+            <option value="50x25">50 × 25</option>
+            <option value="40x20">40 × 20</option>
+            <option value="30x20">30 × 20</option>
+            <option value="30x15">30 × 15</option>
+          </select>
+        </div>
+        <div>
+          <label for="lblAlign">Align</label>
+          <select class="lbl-field" id="lblAlign"><option value="center" selected>Centre</option><option value="left">Left</option><option value="right">Right</option></select>
+        </div>
+      </div>
+      <div class="lbl-row">
+        <div><label for="lblFsize">Font size (px)</label><input class="lbl-field" type="number" id="lblFsize" value="48" min="10" max="200"></div>
+        <div><label for="lblCopies">Copies</label><input class="lbl-field" type="number" id="lblCopies" value="1" min="1" max="50"></div>
+      </div>
+      <div class="lbl-chk"><input type="checkbox" id="lblAuto" checked><span>Auto-fit text to label</span></div>
+      <div class="lbl-chk"><input type="checkbox" id="lblBold" checked><span>Bold</span></div>
+      <div class="lbl-chk"><input type="checkbox" id="lblRotate"><span>Rotate 90° when printing</span></div>
+      <div class="lbl-chk"><input type="checkbox" id="lblBorder"><span>Border</span></div>
+
+      <div class="lbl-section-label">Preview</div>
+      <canvas id="lblPreview"></canvas>
+      <button type="button" class="lbl-btn" id="lblPrint" onclick="labelPrint()" disabled>Print</button>
+
+      <details class="lbl-adv">
+        <summary>Printer settings</summary>
+        <div class="lbl-row">
+          <div><label for="lblDensity">Density (1–15)</label><input class="lbl-field" type="number" id="lblDensity" value="8" min="1" max="15"></div>
+          <div><label for="lblSpeed">Speed (1–5)</label><input class="lbl-field" type="number" id="lblSpeed" value="3" min="1" max="5"></div>
+        </div>
+        <label for="lblMedia">Media type</label>
+        <select class="lbl-field" id="lblMedia">
+          <option value="0a" selected>Gap labels (0x0A)</option>
+          <option value="0b">Black mark (0x0B)</option>
+          <option value="38">Continuous (0x38)</option>
+          <option value="none">Don't send (skip)</option>
+        </select>
+        <div class="lbl-row">
+          <div>
+            <label for="lblWmode">Write mode</label>
+            <select class="lbl-field" id="lblWmode"><option value="nr" selected>Without response</option><option value="wr">With response</option></select>
+          </div>
+          <div>
+            <label for="lblChunk">Chunk size (bytes)</label>
+            <select class="lbl-field" id="lblChunk"><option value="20">20</option><option value="100" selected>100</option><option value="180">180</option><option value="500">500</option></select>
+          </div>
+        </div>
+        <label for="lblNudge">Horizontal nudge (dots; + right, − left, 8 dots = 1 mm)</label>
+        <input class="lbl-field" type="number" id="lblNudge" value="0" step="4">
+        <label for="lblProto">Command set</label>
+        <select class="lbl-field" id="lblProto">
+          <option value="a" selected>A: speed/density/media + footer</option>
+          <option value="b">B: simple header + feed</option>
+          <option value="c">C: raster only + feed</option>
+        </select>
+        <label for="lblChsel">Write channel (characteristic)</label>
+        <select class="lbl-field" id="lblChsel"></select>
+        <label>Log</label>
+        <pre id="lblLog"></pre>
+      </details>
+    </div>
+  </div>
+
   <div class="build-footer" id="buildFooter"></div>
 </div>
 
@@ -983,7 +1124,7 @@
 <script src="/js/panzoom.min.js"></script>
 <script>
 const API = '';
-const APP_BUILD = 'v57'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
+const APP_BUILD = 'v58'; // bumped alongside sw.js CACHE_VERSION — shown at the bottom of the page so we can tell what a device is actually running
 let appToken = localStorage.getItem('sharedtasks_app_token') || null;
 let appStarted = false; // guards against double-starting ensureName/fetchState/polling
 
@@ -2547,15 +2688,247 @@ function switchView(view) {
   document.getElementById('calendarView').style.display = view === 'calendar' ? '' : 'none';
   document.getElementById('mealPlannerView').style.display = view === 'mealPlanner' ? '' : 'none';
   document.getElementById('appointmentsView').style.display = view === 'appointments' ? '' : 'none';
+  document.getElementById('labelsView').style.display = view === 'labels' ? '' : 'none';
   document.getElementById('tabLists').classList.toggle('active', view === 'lists');
   document.getElementById('tabCalendar').classList.toggle('active', view === 'calendar');
   document.getElementById('tabMealPlanner').classList.toggle('active', view === 'mealPlanner');
   document.getElementById('tabAppointments').classList.toggle('active', view === 'appointments');
+  document.getElementById('tabLabels').classList.toggle('active', view === 'labels');
+  if (view === 'labels') window.labelRender();
   if (view === 'calendar') {
     if (!calendarMonth) calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     renderCalendar();
   }
 }
+
+// ---- label printer (Web Bluetooth thermal printer, Chrome on Android only) ----
+// kept inside an IIFE: it was a standalone page with generic names like
+// render/send/print that would collide with the rest of this app. Only the
+// four functions the markup calls are exposed.
+(function () {
+  const $ = id => document.getElementById(id);
+  const DPI_MM = 8; // ~203 dpi = 8 dots per mm
+  const PREFS_KEY = 'ourlist_label_prefs';
+  const PREF_FIELDS = ['lblText', 'lblSize', 'lblAlign', 'lblFsize', 'lblCopies', 'lblAuto', 'lblBold',
+    'lblRotate', 'lblBorder', 'lblDensity', 'lblSpeed', 'lblMedia', 'lblWmode', 'lblChunk', 'lblNudge', 'lblProto'];
+  const cv = $('lblPreview'), ctx = cv.getContext('2d', { willReadFrequently: true });
+  let characteristic = null, device = null, chars = [];
+
+  const hex = u8 => Array.from(u8).map(b => b.toString(16).padStart(2, '0')).join(' ');
+  function log(m) { const l = $('lblLog'); l.textContent += m + '\n'; l.scrollTop = l.scrollHeight; }
+  function setStatus(msg, cls) { const s = $('lblStatus'); s.textContent = msg; s.className = 'lbl-status' + (cls ? ' ' + cls : ''); log(msg); }
+
+  // remember what was last typed/chosen (text, label size, and the rest) on this device
+  function savePrefs() {
+    try {
+      const o = {};
+      PREF_FIELDS.forEach(id => { const el = $(id); o[id] = el.type === 'checkbox' ? el.checked : el.value; });
+      localStorage.setItem(PREFS_KEY, JSON.stringify(o));
+    } catch (_) {}
+  }
+  function restorePrefs() {
+    try {
+      const o = JSON.parse(localStorage.getItem(PREFS_KEY) || 'null');
+      if (!o) return;
+      PREF_FIELDS.forEach(id => {
+        if (!(id in o)) return;
+        const el = $(id);
+        if (el.type === 'checkbox') el.checked = !!o[id];
+        else if (el.tagName === 'SELECT') { if (Array.from(el.options).some(op => op.value === o[id])) el.value = o[id]; }
+        else el.value = o[id];
+      });
+    } catch (_) {}
+  }
+
+  function dims() { const [w, h] = $('lblSize').value.split('x').map(Number); return { w: w * DPI_MM, h: h * DPI_MM }; }
+  function font(px) { return `${$('lblBold').checked ? '700 ' : '400 '}${px}px system-ui, Arial, sans-serif`; }
+
+  function render() {
+    const { w, h } = dims();
+    cv.width = w; cv.height = h;
+    cv.style.width = Math.min(w, 460) + 'px';
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#000'; ctx.textBaseline = 'top';
+    const pad = 12;
+    const lines = $('lblText').value.split('\n');
+    let px = +$('lblFsize').value || 48;
+    const fits = p => {
+      ctx.font = font(p);
+      const widest = Math.max(...lines.map(l => ctx.measureText(l).width));
+      return widest <= w - pad * 2 && lines.length * p * 1.15 <= h - pad * 2;
+    };
+    if ($('lblAuto').checked) { px = 200; while (px > 8 && !fits(px)) px -= 2; }
+    ctx.font = font(px);
+    const lh = px * 1.15, total = lines.length * lh;
+    let y = Math.max(pad, (h - total) / 2);
+    const align = $('lblAlign').value;
+    for (const l of lines) {
+      const tw = ctx.measureText(l).width;
+      const x = align === 'center' ? (w - tw) / 2 : align === 'right' ? w - pad - tw : pad;
+      ctx.fillText(l, x, y); y += lh;
+    }
+    if ($('lblBorder').checked) { ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeRect(2, 2, w - 4, h - 4); }
+  }
+
+  // Build raster bytes (1 = black) from the canvas, optionally rotated 90°
+  function raster() {
+    let src = cv;
+    if ($('lblRotate').checked) {
+      const t = document.createElement('canvas'); t.width = cv.height; t.height = cv.width;
+      const c = t.getContext('2d'); c.translate(t.width, 0); c.rotate(Math.PI / 2); c.drawImage(cv, 0, 0); src = t;
+    }
+    const w = src.width, h = src.height, HEAD = 384, bpr = HEAD / 8;
+    const off = Math.max(0, Math.floor((HEAD - w) / 2) + (parseInt($('lblNudge').value) || 0));
+    const d = src.getContext('2d').getImageData(0, 0, w, h).data;
+    const out = new Uint8Array(bpr * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      const xx = x + off;
+      if (lum < 140 && xx < HEAD) out[y * bpr + (xx >> 3)] |= 0x80 >> (xx & 7);
+    }
+    return { data: out, bpr, h };
+  }
+
+  function concat(parts) {
+    const job = new Uint8Array(parts.reduce((a, p) => a + p.length, 0)); let o = 0;
+    for (const p of parts) { job.set(p, o); o += p.length; }
+    return job;
+  }
+
+  function buildJobA() {
+    const { data, bpr, h } = raster();
+    const parts = [];
+    parts.push([0x1b, 0x40]);                                                              // init
+    parts.push([0x1b, 0x61, 0x01]);                                                        // centre
+    parts.push([0x1b, 0x4e, 0x0d, Math.min(5, Math.max(1, +$('lblSpeed').value))]);        // speed
+    parts.push([0x1b, 0x4e, 0x04, Math.min(15, Math.max(1, +$('lblDensity').value))]);     // density
+    if ($('lblMedia').value !== 'none') parts.push([0x1f, 0x11, parseInt($('lblMedia').value, 16)]); // media type
+    parts.push([0x1d, 0x76, 0x30, 0x00, bpr & 255, bpr >> 8, h & 255, h >> 8]);            // raster header
+    parts.push(data);
+    parts.push([0x1f, 0xf0, 0x05, 0x00, 0x1f, 0xf0, 0x03, 0x00]);                          // footer
+    return concat(parts);
+  }
+
+  function buildJob() {
+    const v = $('lblProto').value;
+    if (v === 'a') return buildJobA();
+    const { data, bpr, h } = raster();
+    const ras = [0x1d, 0x76, 0x30, 0x00, bpr & 255, bpr >> 8, h & 255, h >> 8];
+    return concat(v === 'b'
+      ? [[0x1b, 0x40], [0x1b, 0x61, 0x01], [0x1f, 0x11, 0x02, 0x04], ras, data, [0x1b, 0x64, 0x02, 0x1b, 0x64, 0x02]]
+      : [[0x1b, 0x40], ras, data, [0x1b, 0x64, 0x02]]);
+  }
+
+  async function send(bytes) {
+    const CH = +$('lblChunk').value;
+    const sel = chars[+$('lblChsel').value];
+    if (sel) characteristic = sel;
+    log(`Sending ${bytes.length} bytes in ${CH}-byte chunks (${$('lblWmode').value}) to ${characteristic.uuid}`);
+    log('Header: ' + hex(bytes.slice(0, 24)));
+    for (let i = 0; i < bytes.length; i += CH) {
+      const chunk = bytes.slice(i, i + CH);
+      if ($('lblWmode').value === 'nr' && characteristic.writeValueWithoutResponse) await characteristic.writeValueWithoutResponse(chunk);
+      else await characteristic.writeValue(chunk);
+      await new Promise(r => setTimeout(r, 15));
+    }
+    log('All bytes written');
+  }
+
+  async function connect() {
+    if (!navigator.bluetooth) { setStatus('Web Bluetooth not available. Use Chrome on Android over HTTPS.', 'bad'); return; }
+    try {
+      setStatus('Choose your printer…');
+      device = await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: [0xff00, 0xff80, 0xae30, 0xaf30, 0x18f0, 0xfee7,
+          '0000ff00-0000-1000-8000-00805f9b34fb', '49535343-fe7d-4ae5-8fa9-9fafd205e455'],
+      });
+      log('Device name: ' + device.name);
+      device.addEventListener('gattserverdisconnected', () => {
+        characteristic = null; $('lblPrint').disabled = true; $('lblConnect').textContent = 'Connect printer'; setStatus('Disconnected');
+      });
+      setStatus('Connecting…');
+      const server = await device.gatt.connect();
+      const services = await server.getPrimaryServices();
+      chars = [];
+      for (const s of services) {
+        log('Service ' + s.uuid);
+        for (const c of await s.getCharacteristics()) {
+          const p = Object.keys(c.properties).filter(k => c.properties[k]).join(',');
+          log('  char ' + c.uuid + ' [' + p + ']');
+          if (c.properties.writeWithoutResponse || c.properties.write) chars.push(c);
+          if (c.properties.notify) {
+            try {
+              await c.startNotifications();
+              c.addEventListener('characteristicvaluechanged', e => log('  <- ' + c.uuid.slice(4, 8) + ': ' + hex(new Uint8Array(e.target.value.buffer))));
+            } catch (_) {}
+          }
+        }
+      }
+      if (!chars.length) throw new Error('No writable characteristic found');
+      $('lblChsel').innerHTML = chars.map((c, i) => `<option value="${i}">${c.uuid.slice(4, 8)} (${c.service.uuid.slice(4, 8)})</option>`).join('');
+      const pref = chars.findIndex(c => c.uuid.startsWith('0000ff02'));
+      if (pref >= 0) $('lblChsel').value = pref;
+      characteristic = chars[+$('lblChsel').value];
+      $('lblPrint').disabled = false;
+      $('lblConnect').textContent = 'Connected: ' + (device.name || 'printer');
+      setStatus('Ready', 'ok');
+    } catch (e) { setStatus(e.message || String(e), 'bad'); }
+  }
+
+  async function print() {
+    if (!characteristic) return;
+    savePrefs();
+    $('lblPrint').disabled = true;
+    try {
+      const n = Math.max(1, +$('lblCopies').value || 1);
+      for (let i = 1; i <= n; i++) {
+        setStatus(`Printing ${i}/${n}…`);
+        await send(buildJob());
+        await new Promise(r => setTimeout(r, 1200));
+      }
+      setStatus('Done', 'ok');
+    } catch (e) { setStatus('Print failed: ' + (e.message || e), 'bad'); }
+    $('lblPrint').disabled = !characteristic;
+  }
+
+  // "Made today" / "Use by +N days": sets (or replaces) its own line and leaves
+  // the rest of the text — e.g. the food name on line one — alone
+  function fmtDate(d) {
+    const o = { day: 'numeric', month: 'short' };
+    if (d.getFullYear() !== new Date().getFullYear()) o.year = 'numeric';
+    return d.toLocaleDateString('en-GB', o);
+  }
+  function setLine(prefix, value, beforePrefix) {
+    const ta = $('lblText');
+    const lines = ta.value === '' ? [] : ta.value.split('\n');
+    const line = `${prefix} ${value}`;
+    const idx = lines.findIndex(l => l.startsWith(prefix));
+    if (idx >= 0) lines[idx] = line;
+    else {
+      const before = beforePrefix ? lines.findIndex(l => l.startsWith(beforePrefix)) : -1;
+      if (before >= 0) lines.splice(before, 0, line); else lines.push(line);
+    }
+    ta.value = lines.join('\n');
+    render(); savePrefs();
+  }
+  function preset(kind, days) {
+    const d = new Date();
+    if (kind === 'made') setLine('Made:', fmtDate(d), 'Use by:');
+    else { d.setDate(d.getDate() + days); setLine('Use by:', fmtDate(d)); }
+  }
+
+  PREF_FIELDS.forEach(id => $(id).addEventListener('input', () => { if (['lblText', 'lblSize', 'lblAlign', 'lblFsize', 'lblBold', 'lblAuto', 'lblBorder', 'lblRotate'].includes(id)) render(); savePrefs(); }));
+  restorePrefs();
+  if (!navigator.bluetooth) { $('lblUnsupported').style.display = ''; $('lblConnect').disabled = true; $('lblStatus').textContent = 'Printing not available on this browser'; }
+  render();
+
+  window.labelConnect = connect;
+  window.labelPrint = print;
+  window.labelPreset = preset;
+  window.labelRender = render;
+})();
 
 // ---- meal planner ----
 
